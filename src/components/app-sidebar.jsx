@@ -32,126 +32,29 @@ import { NavMainReport } from "./nav-main-report";
 
 const NAVIGATION_CONFIG = {
   COMMON: {
-    POPUPLIST: {
-      title: "PopUp List",
+    BOM: {
+      title: "BOM",
       url: "/popup-list",
       icon: LayoutGrid,
       isActive: false,
     },
 
-    BANNERLIST: {
-      title: "Banner",
-      url: "/banner-list",
-      icon: Image,
-      isActive: false,
-    },
-    COMPANYLIST: {
-      title: "Company",
-      url: "/company-list",
-      icon: Building2,
-      isActive: false,
-    },
-    COUNTRYLIST: {
-      title: "Country List",
-      url: "/country-list",
-      icon: Globe,
-      isActive: false,
-    },
-    NEWSLETTERLIST: {
-      title: "Newsletter List",
-      url: "/newsletter-list",
-      icon: Mail,
-      isActive: false,
-    },
-    YOUTUBELIST: {
-      title: "Lecture Youtube",
-      url: "/lecture-youtube",
-      icon: Youtube,
-      isActive: false,
-    },
-    STUDENTLIST: {
-      title: "Student",
+    MASTER: {
+      title: "Master",
       url: "#",
       icon: Settings,
       items: [
         {
-          title: "Testimonial",
+          title: "Component",
           url: "/student-testimonial",
           icon: Users,
         },
         {
-          title: "Youtube",
+          title: "Product",
           url: "/student-youtube",
           icon: Users,
         },
-        {
-          title: "Certificate",
-          url: "/student-certificate",
-          icon: Users,
-        },
-        {
-          title: "Success Story",
-          url: "/student-story",
-          icon: Users,
-        },
-        {
-          title: "Recent Passout",
-          url: "/student-recent-passout",
-          icon: Users,
-        },
-        {
-          title: "Office Image",
-          url: "/student-officeimage",
-          icon: Users,
-        },
-        {
-          title: "Map",
-          url: "/student-map",
-          icon: Users,
-        },
-        {
-          title: "Top",
-          url: "/student-top",
-          icon: Users,
-        },
       ],
-    },
-
-    FAQLIST: {
-      title: "FAQ",
-      url: "/faq-list",
-      icon: HelpCircle,
-      isActive: false,
-    },
-    BLOGLIST: {
-      title: "Blog",
-      url: "/blog-list",
-      icon: BookOpen,
-      isActive: false,
-    },
-    SETTINGS: {
-      title: "Settings",
-      url: "/settings",
-      icon: Settings,
-      isActive: false,
-    },
-    GALLERYLIST: {
-      title: "Link Gallery",
-      url: "/gallery-list",
-      icon: Frame,
-      isActive: false,
-    },
-    SIDEPOPUPLIST: {
-      title: "SidePopUp",
-      url: "/side-popup-list",
-      icon: LayoutGrid,
-      isActive: false,
-    },
-    PRLIST: {
-      title: "PR",
-      url: "/pr-list",
-      icon: LayoutGrid,
-      isActive: false,
     },
   },
 
@@ -168,84 +71,38 @@ const NAVIGATION_CONFIG = {
 const USER_ROLE_PERMISSIONS = {
   1: {
     navMain: [
-      "POPUPLIST",
-
-      "BANNERLIST",
-      "COMPANYLIST",
-      "COUNTRYLIST",
-      "YOUTUBELIST",
-      "STUDENTLIST",
-      "NEWSLETTERLIST",
-      "FAQLIST",
-      "GALLERYLIST",
-      "BLOGLIST",
-      "SIDEPOPUPLIST",
+      "BOM",
+      "MASTER",
       // "SETTINGS",
     ],
-    navMainReport: ["SUMMARY", "DOWNLOADS", "OTHER", "SETTINGS"],
+    navMainReport: ["BOM", "MASTER", "SETTINGS"],
   },
 
   2: {
     navMain: [
-      "DASHBOARD",
-      "POPUPLIST",
-      "BANNERLIST",
-      "COMPANYLIST",
-      "COUNTRYLIST",
-      "YOUTUBELIST",
-      "STUDENTLIST",
-      "NEWSLETTERLIST",
-      "MEMBERSHIP",
-      "DONOR",
-      "RECEIPT",
-      "SCHOOL",
-      "FAQLIST",
-      "BLOGLIST",
-      "SIDEPOPUPLIST",
+      "BOM",
+      "MASTER",
+      // "SETTINGS",
     ],
-    navMainReport: ["SUMMARY", "DOWNLOADS", "OTHER", "SETTINGS"],
+    navMainReport: ["BOM", "MASTER", "SETTINGS"],
   },
 
   3: {
     navMain: [
-      "DASHBOARD",
-      "POPUPLIST",
-      "BANNERLIST",
-      "COMPANYLIST",
-      "COUNTRYLIST",
-      "YOUTUBELIST",
-      "STUDENTLIST",
-      "NEWSLETTERLIST",
-      "MEMBERSHIP",
-      "DONOR",
-      "RECEIPT",
-      "SCHOOL",
-      "FAQLIST",
-      "BLOGLIST",
-      "SIDEPOPUPLIST",
+      "BOM",
+      "MASTER",
+      // "SETTINGS",
     ],
-    navMainReport: ["SUMMARY", "DOWNLOADS", "OTHER", "SETTINGS"],
+    navMainReport: ["BOM", "MASTER", "SETTINGS"],
   },
 
   4: {
     navMain: [
-      "DASHBOARD",
-      "POPUPLIST",
-      "BANNERLIST",
-      "COMPANYLIST",
-      "COUNTRYLIST",
-      "YOUTUBELIST",
-      "STUDENTLIST",
-      "NEWSLETTERLIST",
-      "MEMBERSHIP",
-      "DONOR",
-      "RECEIPT",
-      "SCHOOL",
-      "FAQLIST",
-      "BLOGLIST",
-      "SIDEPOPUPLIST",
+      "BOM",
+      "MASTER",
+      // "SETTINGS",
     ],
-    navMainReport: ["SUMMARY", "DOWNLOADS", "OTHER", "SETTINGS"],
+    navMainReport: ["BOM", "MASTER", "SETTINGS"],
   },
 };
 
