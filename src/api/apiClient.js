@@ -1,4 +1,3 @@
-// apiClient.js
 import BASE_URL from "@/config/base-url";
 import { store } from "@/store/store";
 import useAppLogout from "@/utils/logout";

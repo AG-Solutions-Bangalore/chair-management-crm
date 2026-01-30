@@ -34,9 +34,8 @@ const NAVIGATION_CONFIG = {
   COMMON: {
     BOM: {
       title: "BOM",
-      url: "/popup-list",
+      url: "/bom",
       icon: LayoutGrid,
-      isActive: false,
     },
 
     MASTER: {
@@ -51,57 +50,38 @@ const NAVIGATION_CONFIG = {
         },
         {
           title: "Product",
-          url: "/student-youtube",
+          url: "/product",
           icon: Users,
         },
       ],
     },
-  },
 
-  REPORTS: {
     SETTINGS: {
       title: "Settings",
       url: "/settings",
       icon: Blocks,
-      isActive: false,
     },
   },
 };
 
 const USER_ROLE_PERMISSIONS = {
   1: {
-    navMain: [
-      "BOM",
-      "MASTER",
-      // "SETTINGS",
-    ],
+    navMain: ["BOM", "MASTER", "SETTINGS"],
     navMainReport: ["BOM", "MASTER", "SETTINGS"],
   },
 
   2: {
-    navMain: [
-      "BOM",
-      "MASTER",
-      // "SETTINGS",
-    ],
+    navMain: ["BOM", "MASTER", "SETTINGS"],
     navMainReport: ["BOM", "MASTER", "SETTINGS"],
   },
 
   3: {
-    navMain: [
-      "BOM",
-      "MASTER",
-      // "SETTINGS",
-    ],
+    navMain: ["BOM", "MASTER", "SETTINGS"],
     navMainReport: ["BOM", "MASTER", "SETTINGS"],
   },
 
   4: {
-    navMain: [
-      "BOM",
-      "MASTER",
-      // "SETTINGS",
-    ],
+    navMain: ["BOM", "MASTER", "SETTINGS"],
     navMainReport: ["BOM", "MASTER", "SETTINGS"],
   },
 };

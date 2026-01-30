@@ -10,28 +10,27 @@ import BackgroundSVG from "./background-svg";
 import Carousel from "./carousel";
 import LoginForm from "./login-form";
 // import DecorativeSVG from "./decorative-svg";
-
 const testimonials = [
   {
     image:
-      "https://images.unsplash.com/photo-1577896851231-70ef18881754?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
-    title: "Empowering Professionals",
+      "https://images.unsplash.com/photo-1582582621959-48d27397dc69?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
+    title: "Comfort Meets Design",
     description:
-      "International certifications with practical knowledge and expert guidance for your career growth.",
+      "Ergonomically designed chairs that provide comfort and support for everyday use.",
   },
   {
     image:
-      "https://images.unsplash.com/photo-1509062522246-3755977927d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
-    title: "Education for Excellence",
+      "https://images.unsplash.com/photo-1616628182501-9f5b3cda2d32?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
+    title: "Crafted for Every Space",
     description:
-      "Comprehensive training programs designed to help you master internal audit and compliance.",
+      "Stylish chairs that blend seamlessly into homes, offices, and modern interiors.",
   },
   {
     image:
-      "https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
-    title: "15 Years of Excellence",
+      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
+    title: "Quality You Can Trust",
     description:
-      "Trusted by thousands of professionals. Join the Chair community and advance your career.",
+      "Durable materials and thoughtful craftsmanship built to last for years.",
   },
 ];
 

@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Eye, EyeOff, LogIn } from "lucide-react";
 import { Button } from "../ui/button";
+import { Link } from "react-router-dom";
 
 export default function LoginForm({
   email,
@@ -36,9 +37,7 @@ export default function LoginForm({
         <h1 className="text-4xl md:text-5xl font-bold text-dark mb-2">
           Welcome back
         </h1>
-        <p className="text-dark/20 text-lg mb-10">
-          Continue your certification journey with Chair
-        </p>
+        <p className="text-dark/20 text-lg mb-10">Comfort Meets Design</p>
       </motion.div>
       <form onSubmit={handleSubmit}>
         <div className="space-y-5">
@@ -89,7 +88,19 @@ export default function LoginForm({
               </motion.button>
             </div>
           </motion.div>
-
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.85 }}
+            className="mt-2 text-right"
+          >
+            <Link
+              to="/forgot-password"
+              className="text-sm text-primary/80 hover:text-primary transition-colors"
+            >
+              Forgot password?
+            </Link>
+          </motion.div>
           <Button className="w-full py-3" type="submit" disabled={isLoading}>
             {isLoading ? (
               <motion.span

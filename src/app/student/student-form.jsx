@@ -28,7 +28,7 @@ import PageHeader from "@/components/common/page-header";
 import { User } from "lucide-react";
 import { GroupButton } from "@/components/group-button";
 import { Card } from "@/components/ui/card";
-import CompanyDialog from "../company/create-company";
+import CompanyDialog from "../bom/create-bom";
 import CountryForm from "../country/country-form";
 import { CKEditor } from "ckeditor4-react";
 
@@ -1455,7 +1455,7 @@ const StudentForm = () => {
             {data?.student_is_top === "Yes" && (
               <div>
                 <label className="text-sm font-medium block">
-                  Student Marks 
+                  Student Marks
                 </label>
                 <Textarea
                   placeholder="Example: 91,44,55,67"

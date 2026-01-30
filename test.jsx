@@ -1,7 +1,11 @@
+product_code;
+product_name;
+required;
 
+product_category;
+required;
 
-(17:05) side_popup_heading
-side_popup_description
-side_popup_link
-side_popup_status
+product_rate;
+required;
 
+product_description;

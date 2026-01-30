@@ -5,7 +5,6 @@ import { logout } from "@/store/auth/authSlice";
 import { setCompanyDetails, setCompanyImage } from "@/store/auth/companySlice";
 import { setShowUpdateDialog } from "@/store/auth/versionSlice";
 import { persistor } from "@/store/store";
-import { getAuthToken } from "@/utils/authToken";
 import appLogout from "@/utils/logout";
 import CryptoJS from "crypto-js";
 import { createContext, useEffect, useState } from "react";
@@ -23,9 +22,8 @@ const AppProvider = ({ children }) => {
   const location = useLocation();
   const Logout = appLogout();
   const { trigger, loading } = useApiMutation();
+  const token = useSelector((state) => state.auth.token);
 
-  const reduxToken = useSelector((state) => state.auth.token);
-  const token = getAuthToken(reduxToken);
   const localVersion = useSelector((state) => state.auth?.version);
 
   const [isPanelUp, setIsPanelUp] = useState(true);
@@ -56,14 +54,14 @@ const AppProvider = ({ children }) => {
         dispatch(setCompanyImage(panelRes.company_image));
       }
       const serverVersion = panelRes?.version?.version_panel;
-      // if (token) {
-      dispatch(
-        setShowUpdateDialog({
-          showUpdateDialog: localVersion !== serverVersion,
-          version: serverVersion,
-        }),
-      );
-      // }
+      if (token) {
+        dispatch(
+          setShowUpdateDialog({
+            showUpdateDialog: localVersion !== serverVersion,
+            version: serverVersion,
+          }),
+        );
+      }
 
       const envRes = await trigger({ url: PANEL_CHECK.getEnvStatus });
       const computedHash = CryptoJS.MD5(validationKey).toString();
@@ -101,7 +99,7 @@ const AppProvider = ({ children }) => {
     initializeApp();
     const interval = setInterval(pollPanelStatus, 30000);
     return () => clearInterval(interval);
-  }, []);
+  }, [token]);
 
   if (!initialized) return null;
 

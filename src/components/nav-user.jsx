@@ -1,5 +1,5 @@
-// import ChangePassword from "@/app/auth/ChangePassword";
-// import Profile from "@/app/auth/Profile";
+import ChangePassword from "@/app/auth/ChangePassword";
+import Profile from "@/app/auth/Profile";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -28,12 +28,10 @@ export function NavUser({ user }) {
   const { isMobile } = useSidebar();
   const user_position = useSelector((state) => state.auth.user_position);
   const localVersion = useSelector((state) => state.auth?.version);
-  console.log(localVersion,"loc");
   const serverVersion = useSelector((state) => state?.version?.version);
-  console.log(serverVersion, "serv");
-
   const sidebar = useSelector((state) => state?.ui?.sidebarOpen);
   const showDialog = localVersion !== serverVersion ? true : false;
+  console.log(showDialog, "showDialog");
   const dispatch = useDispatch();
   const handleOpenDialog = () => {
     dispatch(
@@ -153,8 +151,8 @@ export function NavUser({ user }) {
           )}
         </SidebarMenuItem>
       </SidebarMenu>
-      {/* <ChangePassword setOpen={setOpen} open={open} />
-      <Profile setOpen={setOpenProfile} open={openprofile} /> */}
+      <ChangePassword setOpen={setOpen} open={open} />
+      <Profile setOpen={setOpenProfile} open={openprofile} />
     </>
   );
 }

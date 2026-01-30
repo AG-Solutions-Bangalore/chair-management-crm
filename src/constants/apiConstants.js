@@ -1,9 +1,27 @@
 export const LOGIN = {
   postLogin: "/panel-login",
+  forgotpassword: "/panel-send-password",
+};
+export const PROFILE = {
+  profile: "/panel-fetch-profile",
+  updateprofile: "/panel-update-profile",
 };
 export const PANEL_CHECK = {
   getPanelStatus: "/panel-check-status",
   getEnvStatus: "/panel-fetch-dotenv",
+};
+export const BOM_API = {
+  list: "/bom",
+  byId: (id) => `/bom/${id}`,
+  updateById: (id) => `/bom/${id}`,
+  updateStatus: (id) => `/boms/${id}/status`,
+};
+export const PRODUCT_API = {
+  list: "/product",
+  active: "/activeProducts",
+  byId: (id) => `/product/${id}`,
+  updateById: (id) => `/product/${id}`,
+  updateStatus: (id) => `/products/${id}/status`,
 };
 export const SIDE_POPUP_API = {
   list: "/side-popup",
