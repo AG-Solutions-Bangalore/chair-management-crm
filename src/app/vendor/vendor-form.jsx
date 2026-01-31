@@ -57,7 +57,6 @@ const VendorForm = () => {
         vendor_mobile: res?.data?.vendor_mobile ?? "",
         vendor_address: res?.data?.vendor_address ?? "",
         vendor_gst: res?.data?.vendor_gst ?? "",
-        vendor_type: res?.data?.vendor_type ?? "",
         vendor_type: res?.data?.vendor_type
           ? res?.data?.vendor_type
               .split(",")
