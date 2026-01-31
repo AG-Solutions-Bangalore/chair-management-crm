@@ -16,7 +16,7 @@ import {
   LayoutGrid,
   Settings,
   Settings2,
-  Users
+  Users,
 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useSelector } from "react-redux";
@@ -46,7 +46,26 @@ const NAVIGATION_CONFIG = {
         },
       ],
     },
-
+    VENDOR: {
+      title: "Vendor",
+      url: "/vendor",
+      icon: LayoutGrid,
+    },
+    PURCHASEPRODUCT: {
+      title: "Purchase Product",
+      url: "/purchase-product",
+      icon: LayoutGrid,
+    },
+    PURCHASECOMPONENT: {
+      title: "Purchase Component",
+      url: "/purchase-component",
+      icon: LayoutGrid,
+    },
+    ORDER: {
+      title: "Order",
+      url: "/order",
+      icon: LayoutGrid,
+    },
     SETTINGS: {
       title: "Settings",
       url: "/settings",
@@ -57,22 +76,54 @@ const NAVIGATION_CONFIG = {
 
 const USER_ROLE_PERMISSIONS = {
   1: {
-    navMain: ["BOM", "MASTER", "SETTINGS"],
+    navMain: [
+      "BOM",
+      "MASTER",
+      "VENDOR",
+      "ORDER",
+      "PURCHASEPRODUCT",
+      "PURCHASECOMPONENT",
+      "SETTINGS",
+    ],
     navMainReport: ["BOM", "MASTER", "SETTINGS"],
   },
 
   2: {
-    navMain: ["BOM", "MASTER", "SETTINGS"],
+    navMain: [
+      "BOM",
+      "MASTER",
+      "VENDOR",
+      "ORDER",
+      "PURCHASEPRODUCT",
+      "PURCHASECOMPONENT",
+      "SETTINGS",
+    ],
     navMainReport: ["BOM", "MASTER", "SETTINGS"],
   },
 
   3: {
-    navMain: ["BOM", "MASTER", "SETTINGS"],
+    navMain: [
+      "BOM",
+      "MASTER",
+      "VENDOR",
+      "ORDER",
+      "PURCHASEPRODUCT",
+      "PURCHASECOMPONENT",
+      "SETTINGS",
+    ],
     navMainReport: ["BOM", "MASTER", "SETTINGS"],
   },
 
   4: {
-    navMain: ["BOM", "MASTER", "SETTINGS"],
+    navMain: [
+      "BOM",
+      "MASTER",
+      "VENDOR",
+      "ORDER",
+      "PURCHASEPRODUCT",
+      "PURCHASECOMPONENT",
+      "SETTINGS",
+    ],
     navMainReport: ["BOM", "MASTER", "SETTINGS"],
   },
 };
@@ -109,7 +160,7 @@ const useNavigationData = (userType) => {
     const navMain = buildNavItems(
       permissions.navMain,
       // { ...NAVIGATION_CONFIG.COMMON, ...NAVIGATION_CONFIG.MODULES },
-      { ...NAVIGATION_CONFIG.COMMON },
+      { ...NAVIGATION_CONFIG.COMMON }
       // { MASTER_SETTINGS_LIMITED: LIMITED_MASTER_SETTINGS }
     );
 
@@ -180,4 +231,3 @@ export function AppSidebar({ ...props }) {
 }
 
 export { NAVIGATION_CONFIG, USER_ROLE_PERMISSIONS };
-

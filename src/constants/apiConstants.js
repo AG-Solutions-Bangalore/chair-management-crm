@@ -32,6 +32,35 @@ export const COMPONENTS_API = {
   updateById: (id) => `/component/${id}`,
   updateStatus: (id) => `/components/${id}/status`,
 };
+export const VENDOR_API = {
+  list: "/vendor",
+  active: "/activeVendors",
+  byId: (id) => `/vendor/${id}`,
+  updateById: (id) => `/vendor/${id}`,
+  updateStatus: (id) => `/vendors/${id}/status`,
+};
+export const PURCHASE_PRODUCT_API = {
+  list: "/purchase-product",
+  byId: (id) => `/purchase-product/${id}`,
+  updateById: (id) => `/purchase-product/${id}`,
+  deleteSubById: (id) => `/purchase-product-sub/${id}`,
+  deleteById: (id) => `/purchase-product/${id}`,
+};
+export const PURCHASE_COMPONENT_API = {
+  list: "/purchase-component",
+  byId: (id) => `/purchase-component/${id}`,
+  updateById: (id) => `/purchase-component/${id}`,
+  deleteSubById: (id) => `/purchase-component-sub/${id}`,
+  deleteById: (id) => `/purchase-component/${id}`,
+};
+export const ORDERS_API = {
+  list: "/order",
+  byId: (id) => `/order/${id}`,
+  updateById: (id) => `/order/${id}`,
+  updateStatus: (id) => `/orders/${id}/status`,
+  deleteSubById: (id) => `/order-sub/${id}`,
+  deleteById: (id) => `/order/${id}`,
+};
 export const SIDE_POPUP_API = {
   list: "/side-popup",
   byId: (id) => `/side-popup/${id}`,

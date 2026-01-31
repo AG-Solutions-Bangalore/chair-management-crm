@@ -51,9 +51,9 @@ export const MemoizedSelect = React.memo(
     const customSelectStyles = {
       control: (base, state) => ({
         ...base,
-        minHeight: "40px",
+        minHeight: "35px",
         borderColor: state.isFocused ? "hsl(var(--ring))" : "hsl(var(--input))",
-        backgroundColor: "hsl(var(--background))",
+        // backgroundColor: "hsl(var(--background))",
         "&:hover": {
           borderColor: "hsl(var(--ring))",
         },

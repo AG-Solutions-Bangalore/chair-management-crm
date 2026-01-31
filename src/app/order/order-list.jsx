@@ -13,36 +13,27 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { BOM_API } from "@/constants/apiConstants";
+import { BOM_API, ORDERS_API } from "@/constants/apiConstants";
 import { useApiMutation } from "@/hooks/useApiMutation";
 import { useGetApiMutation } from "@/hooks/useGetApiMutation";
 import { Edit, Trash2 } from "lucide-react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import BomDialog from "./create-bom";
 
-const BomList = () => {
-  const [open, setOpen] = useState(false);
-  const [editId, setEditId] = useState(null);
+const OrderList = () => {
+  const navigate = useNavigate();
 
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
 
   const { data, isLoading, isError, refetch } = useGetApiMutation({
-    url: BOM_API.list,
-    queryKey: ["bom-list"],
+    url: ORDERS_API.list,
+    queryKey: ["order-list"],
   });
 
-  const { trigger: deleteBom, loading: deleting } = useApiMutation();
-  const handleCreate = () => {
-    setEditId(null);
-    setOpen(true);
-  };
+  const { trigger: deleteOrder, loading: deleting } = useApiMutation();
 
-  const handleEdit = (id) => {
-    setEditId(id);
-    setOpen(true);
-  };
   const handleDeleteClick = (id) => {
     setDeleteId(id);
     setDeleteDialogOpen(true);
@@ -52,19 +43,19 @@ const BomList = () => {
     if (!deleteId) return;
 
     try {
-      const res = await deleteBom({
-        url: BOM_API.deleteById(deleteId),
+      const res = await deleteOrder({
+        url: ORDERS_API.deleteById(deleteId),
         method: "delete",
       });
 
       if (res?.code === 201) {
-        toast.success(res?.message || "BOM deleted successfully");
+        toast.success(res?.message || "Order deleted successfully");
         refetch();
       } else {
-        toast.error(res?.message || "Failed to delete BOM");
+        toast.error(res?.message || "Failed to delete Order");
       }
     } catch (err) {
-      toast.error(err?.message || "Failed to delete BOM");
+      toast.error(err?.message || "Failed to delete Order");
     } finally {
       setDeleteDialogOpen(false);
       setDeleteId(null);
@@ -101,7 +92,7 @@ const BomList = () => {
           <Button
             size="icon"
             variant="outline"
-            onClick={() => handleEdit(row.original.id)}
+            onClick={() => navigate(`/order/edit/${row.original.id}`)}
           >
             <Edit className="h-4 w-4" />
           </Button>
@@ -129,23 +120,21 @@ const BomList = () => {
         data={data?.data?.data || []}
         columns={columns}
         pageSize={10}
-        searchPlaceholder="Search BOM..."
+        searchPlaceholder="Search Order..."
         addButton={{
-          onClick: handleCreate,
-          label: "Add BOM",
+          to: "/order/create",
+          label: "Add Order",
         }}
       />
-
-      <BomDialog open={open} onClose={() => setOpen(false)} bomId={editId} />
 
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle className="text-red-600">
-              Delete Bom
+              Delete Order
             </AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete this bom? This action cannot be
+              Are you sure you want to delete this Order? This action cannot be
               undone."
             </AlertDialogDescription>
           </AlertDialogHeader>
@@ -164,4 +153,4 @@ const BomList = () => {
   );
 };
 
-export default BomList;
+export default OrderList;

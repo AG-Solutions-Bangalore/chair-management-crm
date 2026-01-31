@@ -1,36 +1,5 @@
-import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Loader2, Minus, Plus, Trash2 } from "lucide-react";
-import { toast } from "sonner";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { GroupButton } from "@/components/group-button";
 import LoadingBar from "@/components/loader/loading-bar";
-import { useGetApiMutation } from "@/hooks/useGetApiMutation";
-import { useApiMutation } from "@/hooks/useApiMutation";
-import { BOM_API, COMPONENTS_API, PRODUCT_API } from "@/constants/apiConstants";
-import { useQueryClient } from "@tanstack/react-query";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -41,10 +10,43 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { BOM_API, COMPONENTS_API, PRODUCT_API } from "@/constants/apiConstants";
+import { useApiMutation } from "@/hooks/useApiMutation";
+import { useGetApiMutation } from "@/hooks/useGetApiMutation";
+import { useQueryClient } from "@tanstack/react-query";
+import { Loader2, Minus, Plus, Trash2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 const initialSub = {
   id: "",
   bom_sub_component_id: "",
   bom_sub_qnty: "",
+  bom_status: "Active",
 };
 
 const initialState = {
@@ -87,6 +89,7 @@ const BomDialog = ({ open, onClose, bomId }) => {
 
       setFormData({
         bom_product_id: String(apiData.bom_product_id),
+        bom_status: String(apiData.bom_status),
         subs:
           apiData.subs?.length > 0
             ? apiData.subs.map((s) => ({
@@ -218,32 +221,57 @@ const BomDialog = ({ open, onClose, bomId }) => {
 
           <ScrollArea className="max-h-[55vh] px-6 py-4">
             <div className="space-y-6">
-              <div className="mx-1">
-                <Label>BOM Product *</Label>
-                <Select
-                  value={formData.bom_product_id}
-                  onValueChange={(v) =>
-                    setFormData({ ...formData, bom_product_id: v })
-                  }
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select Product" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {productData?.data?.map((p) => (
-                      <SelectItem key={p.id} value={String(p.id)}>
-                        {p.product_name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                {errors.bom_product_id && (
-                  <p className="text-sm text-red-500">
-                    {errors.bom_product_id}
-                  </p>
-                )}
-              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <div className="mx-1">
+                  <Label>BOM Product *</Label>
+                  <Select
+                    value={formData.bom_product_id}
+                    onValueChange={(v) =>
+                      setFormData({ ...formData, bom_product_id: v })
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select Product" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {productData?.data?.map((p) => (
+                        <SelectItem key={p.id} value={String(p.id)}>
+                          {p.product_name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  {errors.bom_product_id && (
+                    <p className="text-sm text-red-500">
+                      {errors.bom_product_id}
+                    </p>
+                  )}
+                </div>
+                <div>
+                  {isEditMode && (
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">Status *</label>
 
+                      <div>
+                        <GroupButton
+                          className="w-fit"
+                          value={formData.bom_status || "Active"}
+                          onChange={(value) =>
+                            setFormData((prev) => ({
+                              ...prev,
+                              bom_status: value,
+                            }))
+                          }
+                          options={[
+                            { label: "Active", value: "Active" },
+                            { label: "Inactive", value: "Inactive" },
+                          ]}
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
                   <Label>Sub Components *</Label>
@@ -273,7 +301,7 @@ const BomDialog = ({ open, onClose, bomId }) => {
                                 handleSubChange(
                                   index,
                                   "bom_sub_component_id",
-                                  v,
+                                  v
                                 )
                               }
                             >
@@ -304,7 +332,7 @@ const BomDialog = ({ open, onClose, bomId }) => {
                                 handleSubChange(
                                   index,
                                   "bom_sub_qnty",
-                                  e.target.value,
+                                  e.target.value
                                 )
                               }
                             />
