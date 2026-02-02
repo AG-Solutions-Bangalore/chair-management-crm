@@ -23,12 +23,11 @@ import { useSelector } from "react-redux";
 
 const NAVIGATION_CONFIG = {
   COMMON: {
-    BOM: {
-      title: "BOM",
-      url: "/bom",
+    DASHBOARD: {
+      title: "Dashboard",
+      url: "/home",
       icon: LayoutGrid,
     },
-
     MASTER: {
       title: "Master",
       url: "#",
@@ -44,27 +43,58 @@ const NAVIGATION_CONFIG = {
           url: "/product",
           icon: Users,
         },
+
+        {
+          title: "BOM",
+          url: "/bom",
+          icon: LayoutGrid,
+        },
+        {
+          title: "Vendor",
+          url: "/vendor",
+          icon: LayoutGrid,
+        },
       ],
     },
-    VENDOR: {
-      title: "Vendor",
-      url: "/vendor",
-      icon: LayoutGrid,
+    PURCHASE: {
+      title: "Purchase",
+      url: "#1",
+      icon: Settings,
+      items: [
+        {
+          title: "Product",
+          url: "/purchase-product",
+          icon: LayoutGrid,
+        },
+        {
+          title: "Component",
+          url: "/purchase-component",
+          icon: LayoutGrid,
+        },
+      ],
     },
-    PURCHASEPRODUCT: {
-      title: "Purchase Product",
-      url: "/purchase-product",
-      icon: LayoutGrid,
-    },
-    PURCHASECOMPONENT: {
-      title: "Purchase Component",
-      url: "/purchase-component",
-      icon: LayoutGrid,
-    },
+
     ORDER: {
       title: "Order",
       url: "/order",
       icon: LayoutGrid,
+    },
+    REPORT: {
+      title: "Report",
+      url: "#2",
+      icon: Settings,
+      items: [
+        {
+          title: "Report1",
+          url: "",
+          icon: LayoutGrid,
+        },
+        {
+          title: "Report2",
+          url: "",
+          icon: LayoutGrid,
+        },
+      ],
     },
     SETTINGS: {
       title: "Settings",
@@ -76,55 +106,23 @@ const NAVIGATION_CONFIG = {
 
 const USER_ROLE_PERMISSIONS = {
   1: {
-    navMain: [
-      "BOM",
-      "MASTER",
-      "VENDOR",
-      "ORDER",
-      "PURCHASEPRODUCT",
-      "PURCHASECOMPONENT",
-      "SETTINGS",
-    ],
-    navMainReport: ["BOM", "MASTER", "SETTINGS"],
+    navMain: ["DASHBOARD", "MASTER", "PURCHASE", "ORDER", "REPORT", "SETTINGS"],
+    navMainReport: ["DASHBOARD", "MASTER", "SETTINGS"],
   },
 
   2: {
-    navMain: [
-      "BOM",
-      "MASTER",
-      "VENDOR",
-      "ORDER",
-      "PURCHASEPRODUCT",
-      "PURCHASECOMPONENT",
-      "SETTINGS",
-    ],
-    navMainReport: ["BOM", "MASTER", "SETTINGS"],
+    navMain: ["DASHBOARD", "MASTER", "PURCHASE", "ORDER", "REPORT", "SETTINGS"],
+    navMainReport: ["DASHBOARD", "MASTER", "SETTINGS"],
   },
 
   3: {
-    navMain: [
-      "BOM",
-      "MASTER",
-      "VENDOR",
-      "ORDER",
-      "PURCHASEPRODUCT",
-      "PURCHASECOMPONENT",
-      "SETTINGS",
-    ],
-    navMainReport: ["BOM", "MASTER", "SETTINGS"],
+    navMain: ["DASHBOARD", "MASTER", "PURCHASE", "ORDER", "REPORT", "SETTINGS"],
+    navMainReport: ["DASHBOARD", "MASTER", "SETTINGS"],
   },
 
   4: {
-    navMain: [
-      "BOM",
-      "MASTER",
-      "VENDOR",
-      "ORDER",
-      "PURCHASEPRODUCT",
-      "PURCHASECOMPONENT",
-      "SETTINGS",
-    ],
-    navMainReport: ["BOM", "MASTER", "SETTINGS"],
+    navMain: ["DASHBOARD", "MASTER", "PURCHASE", "ORDER", "REPORT", "SETTINGS"],
+    navMainReport: ["DASHBOARD", "MASTER", "SETTINGS"],
   },
 };
 
@@ -160,7 +158,7 @@ const useNavigationData = (userType) => {
     const navMain = buildNavItems(
       permissions.navMain,
       // { ...NAVIGATION_CONFIG.COMMON, ...NAVIGATION_CONFIG.MODULES },
-      { ...NAVIGATION_CONFIG.COMMON }
+      { ...NAVIGATION_CONFIG.COMMON },
       // { MASTER_SETTINGS_LIMITED: LIMITED_MASTER_SETTINGS }
     );
 

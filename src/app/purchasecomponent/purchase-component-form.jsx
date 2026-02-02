@@ -32,9 +32,16 @@ import { Minus, Plus, ShoppingCart, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
-
-/* ---------------- INITIAL STATE ---------------- */
-
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 const initialSub = {
   id: "",
   purchase_c_sub_component_id: "",
@@ -98,7 +105,7 @@ const PurchaseComponentForm = () => {
             ? api.subs.map((s) => ({
                 id: s.id,
                 purchase_c_sub_component_id: String(
-                  s.purchase_c_sub_component_id
+                  s.purchase_c_sub_component_id,
                 ),
                 purchase_c_sub_qnty: String(s.purchase_c_sub_qnty),
               }))
@@ -173,13 +180,13 @@ const PurchaseComponentForm = () => {
       });
 
       if (res?.code === 201) {
-        toast.success("Sub-component deleted");
+        toast.success(res?.message || "Sub-component deleted");
         handleRemoveSub(deleteIndex);
       } else {
-        toast.error("Failed to delete sub-component");
+        toast.error(res?.message || "Failed to delete sub-component");
       }
-    } catch {
-      toast.error("Something went wrong");
+    } catch (err) {
+      toast.error(res?.message || "Something went wrong");
     } finally {
       setDeleteSubId(null);
       setDeleteIndex(null);
@@ -191,9 +198,6 @@ const PurchaseComponentForm = () => {
     updated[index] = { ...updated[index], [field]: value };
     setData((p) => ({ ...p, subs: updated }));
   };
-
-  /* ---------------- SUBMIT ---------------- */
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
@@ -249,8 +253,6 @@ const PurchaseComponentForm = () => {
             </div>
           }
         />
-
-        {/* -------- BASIC DETAILS -------- */}
         <Card className="p-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
@@ -383,7 +385,7 @@ const PurchaseComponentForm = () => {
                         handleSubChange(
                           index,
                           "purchase_c_sub_qnty",
-                          e.target.value
+                          e.target.value,
                         )
                       }
                     />
@@ -399,6 +401,7 @@ const PurchaseComponentForm = () => {
                     <Button
                       variant="ghost"
                       size="icon"
+                      type="button"
                       disabled={data.subs.length <= 1}
                       onClick={() => handleRemoveSubClick(index)}
                     >
@@ -414,24 +417,28 @@ const PurchaseComponentForm = () => {
             </TableBody>
           </Table>
 
-          {deleteSubId && (
-            <div className="flex justify-end mt-3 gap-2">
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={() => setDeleteSubId(null)}
-              >
-                Cancel
-              </Button>
-              <Button
-                size="sm"
-                variant="destructive"
-                onClick={handleConfirmDeleteSub}
-              >
-                Delete
-              </Button>
-            </div>
-          )}
+          <AlertDialog open={deleteSubId} onOpenChange={setDeleteSubId}>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle className="text-red-600">
+                  Delete Purchase Component
+                </AlertDialogTitle>
+                <AlertDialogDescription>
+                  Are you sure you want to delete this Purchase Component sub?
+                  This action cannot be undone."
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={handleConfirmDeleteSub}
+                  className="bg-red-600 hover:bg-red-700 text-white"
+                >
+                  Delete
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </Card>
       </form>
     </div>

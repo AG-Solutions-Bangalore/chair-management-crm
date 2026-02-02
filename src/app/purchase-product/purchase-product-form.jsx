@@ -32,7 +32,16 @@ import { Minus, Plus, ShoppingCart, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
-
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 const initialSub = {
   id: "",
   purchase_p_sub_product_id: "",
@@ -163,13 +172,13 @@ const PurchaseProductForm = () => {
       });
 
       if (res?.code === 201) {
-        toast.success("Sub-product deleted");
+        toast.success(res?.message || "Sub-product deleted");
         handleRemoveSub(deleteIndex);
       } else {
-        toast.error("Failed to delete sub-product");
+        toast.error(res?.message || "Failed to delete sub-product");
       }
-    } catch {
-      toast.error("Something went wrong");
+    } catch (err) {
+      toast.error(err.message || "Something went wrong");
     } finally {
       setDeleteSubId(null);
       setDeleteIndex(null);
@@ -368,7 +377,7 @@ const PurchaseProductForm = () => {
                         handleSubChange(
                           index,
                           "purchase_p_sub_qnty",
-                          e.target.value
+                          e.target.value,
                         )
                       }
                     />
@@ -384,6 +393,7 @@ const PurchaseProductForm = () => {
                     <Button
                       variant="ghost"
                       size="icon"
+                      type="button"
                       disabled={data.subs.length <= 1}
                       onClick={() => handleRemoveSubClick(index)}
                     >
@@ -399,7 +409,7 @@ const PurchaseProductForm = () => {
             </TableBody>
           </Table>
 
-          {deleteSubId && (
+          {/* {deleteSubId && (
             <div className="flex justify-end mt-3 gap-2">
               <Button
                 size="sm"
@@ -416,7 +426,30 @@ const PurchaseProductForm = () => {
                 Delete
               </Button>
             </div>
-          )}
+          )} */}
+
+          <AlertDialog open={deleteSubId} onOpenChange={setDeleteSubId}>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle className="text-red-600">
+                  Delete Purchase Product
+                </AlertDialogTitle>
+                <AlertDialogDescription>
+                  Are you sure you want to delete this Purchase Product sub?
+                  This action cannot be undone."
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={handleConfirmDeleteSub}
+                  className="bg-red-600 hover:bg-red-700 text-white"
+                >
+                  Delete
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </Card>
       </form>
     </div>

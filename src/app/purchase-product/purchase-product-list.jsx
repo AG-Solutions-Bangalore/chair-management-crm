@@ -1,7 +1,6 @@
 import ApiErrorPage from "@/components/api-error/api-error";
 import DataTable from "@/components/common/data-table";
 import LoadingBar from "@/components/loader/loading-bar";
-import ToggleStatus from "@/components/toogle/status-toogle";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -13,10 +12,11 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { BOM_API, PURCHASE_PRODUCT_API } from "@/constants/apiConstants";
+import { PURCHASE_PRODUCT_API } from "@/constants/apiConstants";
 import { useApiMutation } from "@/hooks/useApiMutation";
 import { useGetApiMutation } from "@/hooks/useGetApiMutation";
 import { Edit, Trash2 } from "lucide-react";
+import moment from "moment";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -64,27 +64,19 @@ const PurchaseProductList = () => {
   };
 
   const columns = [
-    { header: "Code", accessorKey: "product_code" },
-    { header: "Name", accessorKey: "product_name", enableSorting: false },
+    { header: "Product No", accessorKey: "purchase_p_no" },
+    { header: "Ref", accessorKey: "purchase_p_ref", enableSorting: false },
     {
-      header: "Category",
-      accessorKey: "product_category",
+      header: "Date",
+      accessorKey: "purchase_p_date",
       enableSorting: false,
+      cell: ({ row }) => {
+        const date = row.original.purchase_p_date ?? "";
+        return date ? moment(date).format("DD MMM YYYY") : "";
+      },
     },
-    { header: "Rate", accessorKey: "product_rate", enableSorting: false },
-    { header: "Quantity", accessorKey: "total_sub_qnty", enableSorting: false },
-    {
-      header: "Status",
-      accessorKey: "bom_status",
-      cell: ({ row }) => (
-        <ToggleStatus
-          initialStatus={row.original.bom_status}
-          apiUrl={BOM_API.updateStatus(row.original.id)}
-          payloadKey="product_status"
-          onSuccess={refetch}
-        />
-      ),
-    },
+    { header: "Vendor", accessorKey: "vendor_name", enableSorting: false },
+    { header: "Quantity", accessorKey: "total_qnty", enableSorting: false },
     {
       header: "Actions",
       accessorKey: "actions",
