@@ -20,7 +20,15 @@ import { Edit, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 const OrderList = () => {
   const navigate = useNavigate();
 
@@ -63,21 +71,30 @@ const OrderList = () => {
   };
 
   const columns = [
-    { header: "Code", accessorKey: "product_code" },
-    { header: "Name", accessorKey: "product_name", enableSorting: false },
+    { header: "Ref", accessorKey: "order_ref" },
+    { header: "Order Date", accessorKey: "order_date", enableSorting: false },
     {
-      header: "Category",
-      accessorKey: "product_category",
+      header: "Vendor Name",
+      accessorKey: "vendor_name",
       enableSorting: false,
     },
-    { header: "Rate", accessorKey: "product_rate", enableSorting: false },
-    { header: "Quantity", accessorKey: "total_sub_qnty", enableSorting: false },
+    {
+      header: "Delivery Date",
+      accessorKey: "order_delivery_date",
+      enableSorting: false,
+    },
+    { header: "Quantity", accessorKey: "total_qnty", enableSorting: false },
+    {
+      header: "Total Amount",
+      accessorKey: "total_amount",
+      enableSorting: false,
+    },
     {
       header: "Status",
-      accessorKey: "bom_status",
+      accessorKey: "order_status",
       cell: ({ row }) => (
         <ToggleStatus
-          initialStatus={row.original.bom_status}
+          initialStatus={row.original.order_status}
           apiUrl={BOM_API.updateStatus(row.original.id)}
           payloadKey="product_status"
           onSuccess={refetch}
@@ -124,6 +141,72 @@ const OrderList = () => {
         addButton={{
           to: "/order/create",
           label: "Add Order",
+        }}
+        expandableRow={(row) => {
+          const totalRate = row.subs
+            ?.reduce((acc, item) => acc + Number(item.product_rate || 0), 0)
+            .toFixed(2);
+          const totalQty = row.subs?.reduce(
+            (acc, item) => acc + Number(item.order_p_sub_qnty || 0),
+            0,
+          );
+
+          const totalAmount = row.subs
+            ?.reduce(
+              (acc, item) => acc + Number(item.order_p_sub_amount || 0),
+              0,
+            )
+            .toFixed(2);
+
+          return (
+            <div className="p-2">
+              <Table className="border">
+                <TableHeader className="border-b">
+                  <TableRow>
+                    <TableHead>Product Name</TableHead>
+                    <TableHead>Category</TableHead>
+                    <TableHead>Rate</TableHead>
+                    <TableHead>Quantity</TableHead>
+                    <TableHead>Amount</TableHead>
+                  </TableRow>
+                </TableHeader>
+
+                <TableBody>
+                  {row.subs?.length ? (
+                    row.subs.map((sub) => (
+                      <TableRow key={sub.id}>
+                        <TableCell>{sub.product_name}</TableCell>
+                        <TableCell>{sub.product_category}</TableCell>
+                        <TableCell>{sub.product_rate}</TableCell>
+                        <TableCell>{sub.order_p_sub_qnty}</TableCell>
+                        <TableCell>{sub.order_p_sub_amount}</TableCell>
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={5} className="text-center">
+                        No products found
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+
+                <TableFooter>
+                  <TableRow>
+                    <TableCell />
+                    <TableCell className="font-semibold">
+                      Total
+                    </TableCell>
+                    <TableCell className="font-semibold">{totalRate}</TableCell>
+                    <TableCell className="font-semibold">{totalQty}</TableCell>
+                    <TableCell className="font-semibold">
+                      {totalAmount}
+                    </TableCell>
+                  </TableRow>
+                </TableFooter>
+              </Table>
+            </div>
+          );
         }}
       />
 

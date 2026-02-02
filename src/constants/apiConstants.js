@@ -12,6 +12,7 @@ export const PANEL_CHECK = {
 };
 export const BOM_API = {
   list: "/bom",
+  GetSubById: (id) => `/bomsubs/${id}`,
   deleteSubById: (id) => `/bom-sub/${id}`,
   byId: (id) => `/bom/${id}`,
   updateById: (id) => `/bom/${id}`,
@@ -58,7 +59,8 @@ export const ORDERS_API = {
   byId: (id) => `/order/${id}`,
   updateById: (id) => `/order/${id}`,
   updateStatus: (id) => `/orders/${id}/status`,
-  deleteSubById: (id) => `/order-sub/${id}`,
+  deleteSubProductById: (id) => `/order-sub/${id}`,
+  deleteSubComponentById: (id) => `/order-sub1/${id}`,
   deleteById: (id) => `/order/${id}`,
 };
 export const SIDE_POPUP_API = {

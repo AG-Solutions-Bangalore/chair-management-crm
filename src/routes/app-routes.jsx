@@ -197,7 +197,7 @@ function AppRoutes() {
             path="/purchase-component/edit/:id"
             element={
               <Suspense fallback={<LoadingBar />}>
-                <PurchaseProductForm />
+                <PurchaseComponentForm />
               </Suspense>
             }
           />

@@ -20,6 +20,15 @@ import { Edit, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import BomDialog from "./create-bom";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 const BomList = () => {
   const [open, setOpen] = useState(false);
@@ -79,8 +88,8 @@ const BomList = () => {
       accessorKey: "product_category",
       enableSorting: false,
     },
-    { header: "Rate", accessorKey: "product_rate", enableSorting: false },
     { header: "Quantity", accessorKey: "total_sub_qnty", enableSorting: false },
+    { header: "Rate", accessorKey: "product_rate", enableSorting: false },
     {
       header: "Status",
       accessorKey: "bom_status",
@@ -134,10 +143,82 @@ const BomList = () => {
           onClick: handleCreate,
           label: "Add BOM",
         }}
+        expandableRow={(row) => {
+          const totalRate = row.subs
+            ?.reduce((acc, item) => acc + Number(item.component_rate || 0), 0)
+            .toFixed(2);
+          const totalQty = row.subs?.reduce(
+            (acc, item) => acc + Number(item.quantity || 0),
+            0,
+          );
+
+          const totalAmount = row.subs
+            ?.reduce(
+              (acc, item) =>
+                acc +
+                Number(item.component_rate || 0) * Number(item.quantity || 0),
+              0,
+            )
+            .toFixed(2);
+          return (
+            <div className="p-2">
+              <Table className="border">
+                <TableHeader className="border-b">
+                  <TableRow>
+                    <TableHead>Component Name</TableHead>
+                    <TableHead>Category</TableHead>
+                    <TableHead>Brand</TableHead>
+                    <TableHead>Unit</TableHead>
+                    <TableHead>Rate</TableHead>
+                    <TableHead>Quantity</TableHead>
+                    <TableHead>Amount</TableHead>
+                  </TableRow>
+                </TableHeader>
+
+                <TableBody>
+                  {row.subs?.length ? (
+                    row.subs.map((sub) => (
+                      <TableRow key={sub.id}>
+                        <TableCell>{sub.component_name}</TableCell>
+                        <TableCell>{sub.component_category}</TableCell>
+                        <TableCell>{sub.component_brand}</TableCell>
+                        <TableCell>{sub.component_unit}</TableCell>
+                        <TableCell>{sub.component_rate}</TableCell>
+                        <TableCell>{sub.quantity}</TableCell>
+                        <TableCell>
+                          {Number(sub.component_rate) * Number(sub.quantity)}
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={7} className="text-center">
+                        No components found
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+                <TableFooter>
+                  <TableRow>
+                    <TableCell />
+                    <TableCell />
+                    <TableCell />
+                    <TableCell className="font-semibold">Total</TableCell>
+                    <TableCell className="font-semibold">{totalRate}</TableCell>
+                    <TableCell className="font-semibold">{totalQty}</TableCell>
+                    <TableCell className="font-semibold">
+                      {totalAmount}
+                    </TableCell>
+                  </TableRow>
+                </TableFooter>
+              </Table>
+            </div>
+          );
+        }}
       />
-
-      <BomDialog open={open} onClose={() => setOpen(false)} bomId={editId} />
-
+      {open && (
+        <BomDialog open={open} onClose={() => setOpen(false)} bomId={editId} />
+      )}
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
