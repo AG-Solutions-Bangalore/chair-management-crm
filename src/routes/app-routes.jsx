@@ -1,9 +1,22 @@
 import Login from "@/app/auth/login";
 import BomList from "@/app/bom/bom";
-import NotFound from "@/app/errors/not-found";
 import Home from "@/app/bom/home/home";
+import ComponentForm from "@/app/component/component-form";
+import ComponentList from "@/app/component/component-list";
+import NotFound from "@/app/errors/not-found";
+import OrderForm from "@/app/order/order-form";
+import OrderList from "@/app/order/order-list";
+import OrderProductionForm from "@/app/order/order-production-form";
 import ProductList from "@/app/product/product-list";
+import ProductionForm from "@/app/production/production-form";
+import ProductionList from "@/app/production/production-list";
+import PurchaseProductForm from "@/app/purchase-product/purchase-product-form";
+import PurchaseProductList from "@/app/purchase-product/purchase-product-list";
+import PurchaseComponentList from "@/app/purchasecomponent/purchas-component-list";
+import PurchaseComponentForm from "@/app/purchasecomponent/purchase-component-form";
 import Settings from "@/app/setting/setting";
+import VendorForm from "@/app/vendor/vendor-form";
+import VendorList from "@/app/vendor/vendor-list";
 import Maintenance from "@/components/common/maintenance";
 import ErrorBoundary from "@/components/error-boundry/error-boundry";
 import ForgotPassword from "@/components/forgot-password/forgot-password";
@@ -12,16 +25,6 @@ import { Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
 import AuthRoute from "./auth-route";
 import ProtectedRoute from "./protected-route";
-import ComponentList from "@/app/component/component-list";
-import ComponentForm from "@/app/component/component-form";
-import VendorList from "@/app/vendor/vendor-list";
-import VendorForm from "@/app/vendor/vendor-form";
-import OrderList from "@/app/order/order-list";
-import OrderForm from "@/app/order/order-form";
-import PurchaseProductList from "@/app/purchase-product/purchase-product-list";
-import PurchaseProductForm from "@/app/purchase-product/purchase-product-form";
-import PurchaseComponentForm from "@/app/purchasecomponent/purchase-component-form";
-import PurchaseComponentList from "@/app/purchasecomponent/purchas-component-list";
 
 function AppRoutes() {
   return (
@@ -198,6 +201,38 @@ function AppRoutes() {
             element={
               <Suspense fallback={<LoadingBar />}>
                 <PurchaseComponentForm />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/order/production/create/:id"
+            element={
+              <Suspense fallback={<LoadingBar />}>
+                <OrderProductionForm />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/production"
+            element={
+              <Suspense fallback={<LoadingBar />}>
+                <ProductionList />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/production/create"
+            element={
+              <Suspense fallback={<LoadingBar />}>
+                <ProductionForm />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/production/edit/:id"
+            element={
+              <Suspense fallback={<LoadingBar />}>
+                <ProductionForm />
               </Suspense>
             }
           />

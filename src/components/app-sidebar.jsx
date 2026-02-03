@@ -79,6 +79,11 @@ const NAVIGATION_CONFIG = {
       url: "/order",
       icon: LayoutGrid,
     },
+    PRODUCTION: {
+      title: "Production",
+      url: "/production",
+      icon: LayoutGrid,
+    },
     REPORT: {
       title: "Report",
       url: "#2",
@@ -106,22 +111,54 @@ const NAVIGATION_CONFIG = {
 
 const USER_ROLE_PERMISSIONS = {
   1: {
-    navMain: ["DASHBOARD", "MASTER", "PURCHASE", "ORDER", "REPORT", "SETTINGS"],
+    navMain: [
+      "DASHBOARD",
+      "MASTER",
+      "PURCHASE",
+      "ORDER",
+      "PRODUCTION",
+      "REPORT",
+      "SETTINGS",
+    ],
     navMainReport: ["DASHBOARD", "MASTER", "SETTINGS"],
   },
 
   2: {
-    navMain: ["DASHBOARD", "MASTER", "PURCHASE", "ORDER", "REPORT", "SETTINGS"],
+    navMain: [
+      "DASHBOARD",
+      "MASTER",
+      "PURCHASE",
+      "ORDER",
+      "PRODUCTION",
+      "REPORT",
+      "SETTINGS",
+    ],
     navMainReport: ["DASHBOARD", "MASTER", "SETTINGS"],
   },
 
   3: {
-    navMain: ["DASHBOARD", "MASTER", "PURCHASE", "ORDER", "REPORT", "SETTINGS"],
+    navMain: [
+      "DASHBOARD",
+      "MASTER",
+      "PURCHASE",
+      "ORDER",
+      "PRODUCTION",
+      "REPORT",
+      "SETTINGS",
+    ],
     navMainReport: ["DASHBOARD", "MASTER", "SETTINGS"],
   },
 
   4: {
-    navMain: ["DASHBOARD", "MASTER", "PURCHASE", "ORDER", "REPORT", "SETTINGS"],
+    navMain: [
+      "DASHBOARD",
+      "MASTER",
+      "PURCHASE",
+      "ORDER",
+      "PRODUCTION",
+      "REPORT",
+      "SETTINGS",
+    ],
     navMainReport: ["DASHBOARD", "MASTER", "SETTINGS"],
   },
 };

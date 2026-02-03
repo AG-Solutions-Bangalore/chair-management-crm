@@ -20,6 +20,15 @@ import moment from "moment";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 const PurchaseProductList = () => {
   const navigate = useNavigate();
@@ -119,6 +128,74 @@ const PurchaseProductList = () => {
         addButton={{
           to: "/purchase-product/create",
           label: "Add Purchase Product",
+        }}
+        expandableRow={(row) => {
+          const totalRate = row.subs
+            ?.reduce((acc, item) => acc + Number(item.product_rate || 0), 0)
+            .toFixed(2);
+          const totalQty = row.subs?.reduce(
+            (acc, item) => acc + Number(item.purchase_p_sub_qnty || 0),
+            0,
+          );
+
+          const totalAmount = row.subs
+            ?.reduce(
+              (acc, item) =>
+                acc +
+                Number(item.product_rate || 0) *
+                  Number(item.purchase_p_sub_qnty || 0),
+              0,
+            )
+            .toFixed(2);
+          return (
+            <div className="p-2">
+              <Table className="border">
+                <TableHeader className="border-b">
+                  <TableRow>
+                    <TableHead>Name</TableHead>
+                    <TableHead>Category</TableHead>
+                    <TableHead>Rate</TableHead>
+                    <TableHead>Quantity</TableHead>
+                    <TableHead>Amount</TableHead>
+                  </TableRow>
+                </TableHeader>
+
+                <TableBody>
+                  {row.subs?.length ? (
+                    row.subs.map((sub) => (
+                      <TableRow key={sub.id}>
+                        <TableCell>{sub.product_name}</TableCell>
+                        <TableCell>{sub.product_category}</TableCell>
+                        <TableCell>{sub.product_rate}</TableCell>
+                        <TableCell>{sub.purchase_p_sub_qnty}</TableCell>
+                        <TableCell>
+                          {Number(sub.product_rate) *
+                            Number(sub.purchase_p_sub_qnty)}
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={7} className="text-center">
+                        No purchase product found
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+                <TableFooter>
+                  <TableRow>
+                    <TableCell />
+                    <TableCell className="font-semibold">Total</TableCell>
+                    <TableCell className="font-semibold">{totalRate}</TableCell>
+                    <TableCell className="font-semibold">{totalQty}</TableCell>
+                    <TableCell className="font-semibold">
+                      {totalAmount}
+                    </TableCell>
+                  </TableRow>
+                </TableFooter>
+              </Table>
+            </div>
+          );
         }}
       />
 
