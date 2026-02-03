@@ -4,6 +4,7 @@ import LoadingBar from "@/components/loader/loading-bar";
 import ToggleStatus from "@/components/toogle/status-toogle";
 import { Button } from "@/components/ui/button";
 import { COMPONENTS_API, VENDOR_API } from "@/constants/apiConstants";
+import { VENDOR_TYPE_OPTIONS } from "@/constants/vendorConstants";
 import useDebounce from "@/hooks/useDebounce";
 import { useGetApiMutation } from "@/hooks/useGetApiMutation";
 import { Edit } from "lucide-react";
@@ -22,7 +23,7 @@ const VendorList = () => {
       per_page: pageSize,
       ...(debouncedSearch?.trim() && { search: debouncedSearch.trim() }),
     }),
-    [pageIndex, pageSize, debouncedSearch]
+    [pageIndex, pageSize, debouncedSearch],
   );
   const { data, isLoading, isError, refetch } = useGetApiMutation({
     url: VENDOR_API.list,
@@ -30,14 +31,42 @@ const VendorList = () => {
     params,
   });
   const apiData = data?.data;
+  const getVendorTypeLabels = (vendorType) => {
+    if (!vendorType) return [];
 
+    const ids = vendorType.split(",");
+
+    return VENDOR_TYPE_OPTIONS.filter((opt) => ids.includes(opt.value)).map(
+      (opt) => opt.label,
+    );
+  };
   const columns = [
     { header: "Name", accessorKey: "vendor_name" },
     { header: "Contact Name", accessorKey: "vendor_contact_name" },
     { header: "Email", accessorKey: "vendor_email" },
     { header: "Mobile", accessorKey: "vendor_mobile" },
     { header: "Gst", accessorKey: "vendor_gst" },
-    { header: "Type", accessorKey: "vendor_type" },
+    {
+      header: "Type",
+      accessorKey: "vendor_type",
+      cell: ({ row }) => {
+        const types = getVendorTypeLabels(row.original.vendor_type);
+
+        return (
+          <div className="flex flex-col gap-1">
+            {types.length ? (
+              types.map((t) => (
+                <span key={t} className="text-sm">
+                  {t}
+                </span>
+              ))
+            ) : (
+              <span className="text-muted-foreground">—</span>
+            )}
+          </div>
+        );
+      },
+    },
     {
       header: "Status",
       accessorKey: "vendor_status",

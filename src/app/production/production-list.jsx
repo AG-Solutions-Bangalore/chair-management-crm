@@ -26,24 +26,24 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ORDERS_API } from "@/constants/apiConstants";
-import { ORDER_STATUSES } from "@/constants/orderConstants";
+import { PRODUCTION_API } from "@/constants/apiConstants";
+import { PRODUCTION_STATUSES } from "@/constants/productionConstants";
 import { useApiMutation } from "@/hooks/useApiMutation";
 import { useGetApiMutation } from "@/hooks/useGetApiMutation";
-import { ChevronDown, Edit, Factory, Trash2 } from "lucide-react";
+import { ChevronDown, Edit, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
-const useOrderStatusUpdate = (onSuccess) => {
+const updateProduction = (onSuccess) => {
   const { trigger, loading } = useApiMutation();
 
-  const updateOrderStatus = async (orderId, status) => {
+  const updateProductionStatus = async (orderId, status) => {
     try {
       const res = await trigger({
-        url: ORDERS_API.updateStatus(orderId),
+        url: PRODUCTION_API.updateStatus(orderId),
         method: "patch",
-        data: { order_status: status },
+        data: { production_p_status: status },
       });
 
       if (res?.code === 201) {
@@ -57,21 +57,21 @@ const useOrderStatusUpdate = (onSuccess) => {
     }
   };
 
-  return { updateOrderStatus, loading };
+  return { updateProductionStatus, loading };
 };
-const OrderList = () => {
+const ProductionList = () => {
   const navigate = useNavigate();
 
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
 
   const { data, isLoading, isError, refetch } = useGetApiMutation({
-    url: ORDERS_API.list,
-    queryKey: ["order-list"],
+    url: PRODUCTION_API.list,
+    queryKey: ["production-list"],
   });
-  const { updateOrderStatus } = useOrderStatusUpdate(refetch);
+  const { updateProductionStatus } = updateProduction(refetch);
 
-  const { trigger: deleteOrder, loading: deleting } = useApiMutation();
+  const { trigger: deleteProduction, loading: deleting } = useApiMutation();
 
   const handleDeleteClick = (id) => {
     setDeleteId(id);
@@ -82,8 +82,8 @@ const OrderList = () => {
     if (!deleteId) return;
 
     try {
-      const res = await deleteOrder({
-        url: ORDERS_API.deleteById(deleteId),
+      const res = await deleteProduction({
+        url: PRODUCTION_API.deleteById(deleteId),
         method: "delete",
       });
 
@@ -102,30 +102,25 @@ const OrderList = () => {
   };
 
   const columns = [
-    { header: "Ref", accessorKey: "order_ref" },
-    { header: "Order Date", accessorKey: "order_date", enableSorting: false },
+    { header: "Production Ref", accessorKey: "production_p_ref" },
+    { header: "Order Ref", accessorKey: "order_ref" },
+    { header: "Date", accessorKey: "production_p_date", enableSorting: false },
     {
-      header: "Vendor Name",
-      accessorKey: "vendor_name",
+      header: "Product Name",
+      accessorKey: "product_name",
       enableSorting: false,
     },
     {
-      header: "Delivery Date",
-      accessorKey: "order_delivery_date",
-      enableSorting: false,
-    },
-    { header: "Quantity", accessorKey: "total_qnty", enableSorting: false },
-    {
-      header: "Total Amount",
-      accessorKey: "total_amount",
+      header: "Quantity",
+      accessorKey: "production_p_qnty",
       enableSorting: false,
     },
     {
       header: "Status",
-      accessorKey: "order_status",
+      accessorKey: "production_p_status",
       cell: ({ row }) => {
         const [open, setOpen] = useState(false);
-        const status = row.original.order_status;
+        const status = row.original.production_p_status;
 
         return (
           <Popover open={open} onOpenChange={setOpen}>
@@ -141,14 +136,14 @@ const OrderList = () => {
             </PopoverTrigger>
 
             <PopoverContent className="w-[160px] p-1">
-              {ORDER_STATUSES.map((item) => (
+              {PRODUCTION_STATUSES.map((item) => (
                 <Button
                   key={item?.id}
                   variant={item?.value === status ? "secondary" : "ghost"}
                   size="sm"
                   className="w-full justify-start"
                   onClick={() => {
-                    updateOrderStatus(row.original.id, item?.value);
+                    updateProductionStatus(row.original.id, item?.value);
                     setOpen(false);
                   }}
                 >
@@ -171,21 +166,11 @@ const OrderList = () => {
             <Button
               size="icon"
               variant="outline"
-              onClick={() => navigate(`/order/edit/${row.original.id}`)}
+              onClick={() => navigate(`/production/edit/${row.original.id}`)}
             >
               <Edit className="h-4 w-4" />
             </Button>
-            {status === "In Production" && (
-              <Button
-                size="icon"
-                variant="outline"
-                onClick={() =>
-                  navigate(`/order/production/create/${row.original.id}`)
-                }
-              >
-                <Factory className="h-4 w-4" />
-              </Button>
-            )}
+
             <Button
               size="icon"
               variant="outline"
@@ -212,8 +197,8 @@ const OrderList = () => {
         pageSize={10}
         searchPlaceholder="Search Order..."
         addButton={{
-          to: "/order/create",
-          label: "Add Order",
+          to: "/production/create",
+          label: "Add Production",
         }}
         expandableRow={(row) => {
           const totalRate = row.subs
@@ -307,4 +292,4 @@ const OrderList = () => {
   );
 };
 
-export default OrderList;
+export default ProductionList;

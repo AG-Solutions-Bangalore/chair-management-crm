@@ -63,6 +63,14 @@ export const ORDERS_API = {
   deleteSubComponentById: (id) => `/order-sub1/${id}`,
   deleteById: (id) => `/order/${id}`,
 };
+export const PRODUCTION_API = {
+  list: "/production",
+  byId: (id) => `/production/${id}`,
+  updateById: (id) => `/production/${id}`,
+  deleteById: (id) => `/production/${id}`,
+  deleteSubById: (id) => `/production-sub/${id}`,
+  updateStatus: (id) => `/productions/${id}/status`,
+};
 export const SIDE_POPUP_API = {
   list: "/side-popup",
   byId: (id) => `/side-popup/${id}`,

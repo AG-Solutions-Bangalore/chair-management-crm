@@ -193,7 +193,7 @@ const BomList = () => {
                   ) : (
                     <TableRow>
                       <TableCell colSpan={7} className="text-center">
-                        No components found
+                        No bom found
                       </TableCell>
                     </TableRow>
                   )}
