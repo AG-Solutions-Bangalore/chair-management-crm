@@ -17,31 +17,24 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableFooter,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { PRODUCTION_API } from "@/constants/apiConstants";
 import { PRODUCTION_STATUSES } from "@/constants/productionConstants";
 import { useApiMutation } from "@/hooks/useApiMutation";
 import { useGetApiMutation } from "@/hooks/useGetApiMutation";
 import { ChevronDown, Edit, Trash2 } from "lucide-react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import ProductionEditDialog from "./production-edit";
+import moment from "moment";
+import { useSelector } from "react-redux";
 
 const updateProduction = (onSuccess) => {
   const { trigger, loading } = useApiMutation();
 
-  const updateProductionStatus = async (orderId, status) => {
+  const updateProductionStatus = async (productionId, status) => {
     try {
       const res = await trigger({
-        url: PRODUCTION_API.updateStatus(orderId),
+        url: PRODUCTION_API.updateStatus(productionId),
         method: "patch",
         data: { production_p_status: status },
       });
@@ -60,16 +53,17 @@ const updateProduction = (onSuccess) => {
   return { updateProductionStatus, loading };
 };
 const ProductionList = () => {
-  const navigate = useNavigate();
-
+  const [open, setOpen] = useState(false);
+  const [selectedId, setSelectedId] = useState(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
+  const userType = useSelector((state) => state.auth?.user?.user_type);
 
   const { data, isLoading, isError, refetch } = useGetApiMutation({
     url: PRODUCTION_API.list,
     queryKey: ["production-list"],
   });
-  const { updateProductionStatus } = updateProduction(refetch);
+  const { updateProductionStatus, loading } = updateProduction(refetch);
 
   const { trigger: deleteProduction, loading: deleting } = useApiMutation();
 
@@ -88,13 +82,13 @@ const ProductionList = () => {
       });
 
       if (res?.code === 201) {
-        toast.success(res?.message || "Order deleted successfully");
+        toast.success(res?.message || "Production Data deleted successfully");
         refetch();
       } else {
-        toast.error(res?.message || "Failed to delete Order");
+        toast.error(res?.message || "Failed to delete Production");
       }
     } catch (err) {
-      toast.error(err?.message || "Failed to delete Order");
+      toast.error(err?.message || "Failed to delete Production");
     } finally {
       setDeleteDialogOpen(false);
       setDeleteId(null);
@@ -102,9 +96,22 @@ const ProductionList = () => {
   };
 
   const columns = [
+    {
+      header: "S.No",
+      cell: ({ row }) => row.index + 1,
+    },
     { header: "Production Ref", accessorKey: "production_p_ref" },
     { header: "Order Ref", accessorKey: "order_ref" },
-    { header: "Date", accessorKey: "production_p_date", enableSorting: false },
+    {
+      header: "Date",
+      accessorKey: "production_p_date",
+      enableSorting: false,
+      cell: ({ row }) => {
+        const date = row.original.production_p_date ?? "";
+        return date ? moment(date).format("DD MMM YYYY") : "";
+      },
+    },
+
     {
       header: "Product Name",
       accessorKey: "product_name",
@@ -160,25 +167,28 @@ const ProductionList = () => {
       header: "Actions",
       accessorKey: "actions",
       cell: ({ row }) => {
-        const status = row.original.order_status;
         return (
           <div className="flex gap-2">
             <Button
               size="icon"
               variant="outline"
-              onClick={() => navigate(`/production/edit/${row.original.id}`)}
+              onClick={() => {
+                setSelectedId(row.original.id);
+                setOpen(true);
+              }}
             >
               <Edit className="h-4 w-4" />
             </Button>
-
-            <Button
-              size="icon"
-              variant="outline"
-              onClick={() => handleDeleteClick(row.original.id)}
-              disabled={deleting}
-            >
-              <Trash2 className="h-4 w-4" />
-            </Button>
+            {userType != 1 && (
+              <Button
+                size="icon"
+                variant="outline"
+                onClick={() => handleDeleteClick(row.original.id)}
+                disabled={deleting}
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            )}
           </div>
         );
       },
@@ -186,95 +196,30 @@ const ProductionList = () => {
     },
   ];
 
-  if (isLoading) return <LoadingBar />;
   if (isError) return <ApiErrorPage onRetry={refetch} />;
 
   return (
     <>
+      {(isLoading || loading) && <LoadingBar />}{" "}
       <DataTable
         data={data?.data?.data || []}
         columns={columns}
         pageSize={10}
-        searchPlaceholder="Search Order..."
+        searchPlaceholder="Search Production..."
         addButton={{
           to: "/production/create",
           label: "Add Production",
         }}
-        expandableRow={(row) => {
-          const totalRate = row.subs
-            ?.reduce((acc, item) => acc + Number(item.product_rate || 0), 0)
-            .toFixed(2);
-          const totalQty = row.subs?.reduce(
-            (acc, item) => acc + Number(item.order_p_sub_qnty || 0),
-            0,
-          );
-
-          const totalAmount = row.subs
-            ?.reduce(
-              (acc, item) => acc + Number(item.order_p_sub_amount || 0),
-              0,
-            )
-            .toFixed(2);
-
-          return (
-            <div className="p-2">
-              <Table className="border">
-                <TableHeader className="border-b">
-                  <TableRow>
-                    <TableHead>Product Name</TableHead>
-                    <TableHead>Category</TableHead>
-                    <TableHead>Rate</TableHead>
-                    <TableHead>Quantity</TableHead>
-                    <TableHead>Amount</TableHead>
-                  </TableRow>
-                </TableHeader>
-
-                <TableBody>
-                  {row.subs?.length ? (
-                    row.subs.map((sub) => (
-                      <TableRow key={sub.id}>
-                        <TableCell>{sub.product_name}</TableCell>
-                        <TableCell>{sub.product_category}</TableCell>
-                        <TableCell>{sub.product_rate}</TableCell>
-                        <TableCell>{sub.order_p_sub_qnty}</TableCell>
-                        <TableCell>{sub.order_p_sub_amount}</TableCell>
-                      </TableRow>
-                    ))
-                  ) : (
-                    <TableRow>
-                      <TableCell colSpan={5} className="text-center">
-                        No products found
-                      </TableCell>
-                    </TableRow>
-                  )}
-                </TableBody>
-
-                <TableFooter>
-                  <TableRow>
-                    <TableCell />
-                    <TableCell className="font-semibold">Total</TableCell>
-                    <TableCell className="font-semibold">{totalRate}</TableCell>
-                    <TableCell className="font-semibold">{totalQty}</TableCell>
-                    <TableCell className="font-semibold">
-                      {totalAmount}
-                    </TableCell>
-                  </TableRow>
-                </TableFooter>
-              </Table>
-            </div>
-          );
-        }}
       />
-
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle className="text-red-600">
-              Delete Order
+              Delete Production
             </AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete this Order? This action cannot be
-              undone."
+              Are you sure you want to delete this Production Data? This action
+              cannot be undone."
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -288,6 +233,13 @@ const ProductionList = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+      {open && (
+        <ProductionEditDialog
+          open={open}
+          productionId={selectedId}
+          onClose={() => setOpen(false)}
+        />
+      )}
     </>
   );
 };

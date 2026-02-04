@@ -79,7 +79,6 @@ const ComponentForm = () => {
   const validate = () => {
     const err = {};
 
-    if (!data.component_code) err.component_code = "Component code is required";
     if (!data.component_name) err.component_name = "Component name is required";
     if (!data.component_category)
       err.component_category = "Category is required";
@@ -145,18 +144,13 @@ const ComponentForm = () => {
         <Card className="p-4">
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
             <div>
-              <label className="text-sm font-medium">Component Code *</label>
+              <label className="text-sm font-medium">Component Code</label>
               <Input
                 value={data.component_code || ""}
                 onChange={(e) =>
                   setData({ ...data, component_code: e.target.value })
                 }
               />
-              {errors.component_code && (
-                <p className="text-xs text-red-500 mt-1">
-                  {errors.component_code}
-                </p>
-              )}
             </div>
 
             <div>

@@ -29,11 +29,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useSelector } from "react-redux";
 
 const BomList = () => {
   const [open, setOpen] = useState(false);
   const [editId, setEditId] = useState(null);
-
+  const userType = useSelector((state) => state.auth?.user?.user_type);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
 
@@ -82,14 +83,13 @@ const BomList = () => {
 
   const columns = [
     { header: "Code", accessorKey: "product_code" },
-    { header: "Name", accessorKey: "product_name", enableSorting: false },
+    { header: "Name", accessorKey: "product_name" },
     {
       header: "Category",
       accessorKey: "product_category",
-      enableSorting: false,
     },
-    { header: "Quantity", accessorKey: "total_sub_qnty", enableSorting: false },
-    { header: "Rate", accessorKey: "product_rate", enableSorting: false },
+    { header: "Quantity", accessorKey: "total_sub_qnty" },
+    { header: "Rate", accessorKey: "product_rate" },
     {
       header: "Status",
       accessorKey: "bom_status",
@@ -114,15 +114,16 @@ const BomList = () => {
           >
             <Edit className="h-4 w-4" />
           </Button>
-
-          <Button
-            size="icon"
-            variant="outline"
-            onClick={() => handleDeleteClick(row.original.id)}
-            disabled={deleting}
-          >
-            <Trash2 className="h-4 w-4" />
-          </Button>
+          {userType != 1 && (
+            <Button
+              size="icon"
+              variant="outline"
+              onClick={() => handleDeleteClick(row.original.id)}
+              disabled={deleting}
+            >
+              <Trash2 className="h-4 w-4" />
+            </Button>
+          )}
         </div>
       ),
       enableSorting: false,
