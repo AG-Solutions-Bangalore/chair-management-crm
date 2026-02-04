@@ -109,7 +109,7 @@ const OrderList = () => {
     },
     { header: "Ref", accessorKey: "order_ref" },
     {
-      header: "Date",
+      header: "Order Date",
       accessorKey: "order_date",
       cell: ({ row }) => {
         const date = row.original.order_date ?? "";
@@ -123,6 +123,10 @@ const OrderList = () => {
     {
       header: "Delivery Date",
       accessorKey: "order_delivery_date",
+      cell: ({ row }) => {
+        const date = row.original.order_delivery_date ?? "";
+        return date ? moment(date).format("DD MMM YYYY") : "";
+      },
     },
     { header: "Quantity", accessorKey: "total_qnty" },
     {
@@ -232,6 +236,10 @@ const OrderList = () => {
             (acc, item) => acc + Number(item.order_p_sub_qnty || 0),
             0,
           );
+          const totalQtyProduction = row.production?.reduce(
+            (acc, item) => acc + Number(item.production_p_qnty || 0),
+            0,
+          );
 
           const totalAmount = row.subs
             ?.reduce(
@@ -243,6 +251,7 @@ const OrderList = () => {
           return (
             <>
               <div className="p-2">
+                <h2 className="mb-2 text-bold text-lg">Product Details</h2>
                 <Table className="border">
                   <TableHeader className="border-b">
                     <TableRow>
@@ -291,68 +300,55 @@ const OrderList = () => {
                   </TableFooter>
                 </Table>
               </div>
+              {row.production?.length > 0 && (
+                <div className="p-2">
+                  <h2 className="mb-2 text-bold text-lg">Production Details</h2>
 
-              {/* //             "production": [
-                //     {
-                //         "id": 16,
-                //         "production_p_ref": "PRO-2025-26-3",
-                //         "production_p_date": "2026-01-27",
-                //         "product_name": "Office Chair Standard",
-                //         "production_p_qnty": "1",
-                //         "production_p_amount": "6767.00",
-                //         "production_p_status": "Finish"
-                //     }
-                // ] */}
-              <div className="p-2">
-                <Table className="border">
-                  <TableHeader className="border-b">
-                    <TableRow>
-                      <TableHead>Ref</TableHead>
-                      <TableHead>Date</TableHead>
-                      <TableHead>Product Name</TableHead>
-                      <TableHead>Quantity</TableHead>
-                      <TableHead>Amount</TableHead>
-                      <TableHead>Status</TableHead>
-                    </TableRow>
-                  </TableHeader>
-
-                  <TableBody>
-                    {row.subs?.length ? (
-                      row.subs.map((sub) => (
-                        <TableRow key={sub.id}>
-                          <TableCell>{sub.product_name}</TableCell>
-                          <TableCell>{sub.product_category}</TableCell>
-                          <TableCell>{sub.product_rate}</TableCell>
-                          <TableCell>{sub.order_p_sub_qnty}</TableCell>
-                          <TableCell>{sub.order_p_sub_amount}</TableCell>
-                        </TableRow>
-                      ))
-                    ) : (
+                  <Table className="border">
+                    <TableHeader className="border-b">
                       <TableRow>
-                        <TableCell colSpan={5} className="text-center">
-                          No products found
+                        <TableHead>Ref</TableHead>
+                        <TableHead>Date</TableHead>
+                        <TableHead>Product Name</TableHead>
+                        <TableHead>Quantity</TableHead>
+                        <TableHead>Status</TableHead>
+                      </TableRow>
+                    </TableHeader>
+
+                    <TableBody>
+                      {row.production?.length ? (
+                        row.production.map((sub) => (
+                          <TableRow key={sub.id}>
+                            <TableCell>{sub.production_p_ref}</TableCell>
+                            <TableCell>{sub.production_p_date}</TableCell>
+                            <TableCell>{sub.product_name}</TableCell>
+                            <TableCell>{sub.production_p_qnty}</TableCell>
+                            <TableCell>{sub.production_p_status}</TableCell>
+                          </TableRow>
+                        ))
+                      ) : (
+                        <TableRow>
+                          <TableCell colSpan={5} className="text-center">
+                            No products found
+                          </TableCell>
+                        </TableRow>
+                      )}
+                    </TableBody>
+
+                    <TableFooter>
+                      <TableRow>
+                        <TableCell />
+                        <TableCell />
+                        <TableCell className="font-semibold">Total</TableCell>
+
+                        <TableCell className="font-semibold">
+                          {totalQtyProduction}
                         </TableCell>
                       </TableRow>
-                    )}
-                  </TableBody>
-
-                  <TableFooter>
-                    <TableRow>
-                      <TableCell />
-                      <TableCell className="font-semibold">Total</TableCell>
-                      <TableCell className="font-semibold">
-                        {totalRate}
-                      </TableCell>
-                      <TableCell className="font-semibold">
-                        {totalQty}
-                      </TableCell>
-                      <TableCell className="font-semibold">
-                        {totalAmount}
-                      </TableCell>
-                    </TableRow>
-                  </TableFooter>
-                </Table>
-              </div>
+                    </TableFooter>
+                  </Table>
+                </div>
+              )}
             </>
           );
         }}
