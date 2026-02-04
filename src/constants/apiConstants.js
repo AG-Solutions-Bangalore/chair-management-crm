@@ -10,6 +10,9 @@ export const PANEL_CHECK = {
   getPanelStatus: "/panel-check-status",
   getEnvStatus: "/panel-fetch-dotenv",
 };
+export const DASHBOARD = {
+  list: "/dashboard",
+};
 export const BOM_API = {
   list: "/bom",
   GetSubById: (id) => `/bomsubs/${id}`,

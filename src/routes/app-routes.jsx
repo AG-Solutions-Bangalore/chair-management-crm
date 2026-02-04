@@ -25,6 +25,7 @@ import { Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
 import AuthRoute from "./auth-route";
 import ProtectedRoute from "./protected-route";
+import ProductionEdit from "../app/production/production-edit";
 
 function AppRoutes() {
   return (
@@ -228,14 +229,7 @@ function AppRoutes() {
               </Suspense>
             }
           />
-          <Route
-            path="/production/edit/:id"
-            element={
-              <Suspense fallback={<LoadingBar />}>
-                <ProductionForm />
-              </Suspense>
-            }
-          />
+    
         </Route>
 
         <Route path="*" element={<NotFound />} />
