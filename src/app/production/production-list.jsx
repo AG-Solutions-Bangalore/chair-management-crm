@@ -25,6 +25,8 @@ import { ChevronDown, Edit, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import ProductionEditDialog from "./production-edit";
+import moment from "moment";
+import { useSelector } from "react-redux";
 
 const updateProduction = (onSuccess) => {
   const { trigger, loading } = useApiMutation();
@@ -55,6 +57,7 @@ const ProductionList = () => {
   const [selectedId, setSelectedId] = useState(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
+  const userType = useSelector((state) => state.auth?.user?.user_type);
 
   const { data, isLoading, isError, refetch } = useGetApiMutation({
     url: PRODUCTION_API.list,
@@ -93,9 +96,22 @@ const ProductionList = () => {
   };
 
   const columns = [
+    {
+      header: "S.No",
+      cell: ({ row }) => row.index + 1,
+    },
     { header: "Production Ref", accessorKey: "production_p_ref" },
     { header: "Order Ref", accessorKey: "order_ref" },
-    { header: "Date", accessorKey: "production_p_date", enableSorting: false },
+    {
+      header: "Date",
+      accessorKey: "production_p_date",
+      enableSorting: false,
+      cell: ({ row }) => {
+        const date = row.original.production_p_date ?? "";
+        return date ? moment(date).format("DD MMM YYYY") : "";
+      },
+    },
+
     {
       header: "Product Name",
       accessorKey: "product_name",
@@ -163,15 +179,16 @@ const ProductionList = () => {
             >
               <Edit className="h-4 w-4" />
             </Button>
-
-            <Button
-              size="icon"
-              variant="outline"
-              onClick={() => handleDeleteClick(row.original.id)}
-              disabled={deleting}
-            >
-              <Trash2 className="h-4 w-4" />
-            </Button>
+            {userType != 1 && (
+              <Button
+                size="icon"
+                variant="outline"
+                onClick={() => handleDeleteClick(row.original.id)}
+                disabled={deleting}
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            )}
           </div>
         );
       },

@@ -340,7 +340,7 @@ const OrderProductionForm = () => {
                         ))}
                       </SelectContent>
                     </Select>
-                    <ErrorText message={errors[`product_${pi}`]} />
+                    <ErrorText message={errors[`production_${pi}`]} />
                   </div>
 
                   <Input
@@ -399,6 +399,9 @@ const OrderProductionForm = () => {
                               ))}
                             </SelectContent>
                           </Select>
+                          <ErrorText
+                            message={errors[`production_${pi}_${ci}`]}
+                          />
                         </TableCell>
 
                         <TableCell>

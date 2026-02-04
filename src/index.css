@@ -380,3 +380,6 @@
 .sidebar-content::-webkit-scrollbar-thumb {
   background: hsl(var(--sidebar-primary));
 }
+svg:focus {
+  outline: none;
+}

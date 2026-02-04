@@ -29,8 +29,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useSelector } from "react-redux";
 const PurchaseComponentList = () => {
   const navigate = useNavigate();
+  const userType = useSelector((state) => state.auth?.user?.user_type);
 
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
@@ -74,19 +76,21 @@ const PurchaseComponentList = () => {
   };
 
   const columns = [
-    { header: "Product No", accessorKey: "purchase_c_no" },
-    { header: "Ref", accessorKey: "purchase_c_ref", enableSorting: false },
+    {
+      header: "S.No",
+      cell: ({ row }) => row.index + 1,
+    },
+    { header: "Ref", accessorKey: "purchase_c_ref"},
     {
       header: "Date",
       accessorKey: "purchase_c_date",
-      enableSorting: false,
       cell: ({ row }) => {
         const date = row.original.purchase_c_date ?? "";
         return date ? moment(date).format("DD MMM YYYY") : "";
       },
     },
-    { header: "Vendor", accessorKey: "vendor_name", enableSorting: false },
-    { header: "Quantity", accessorKey: "total_qnty", enableSorting: false },
+    { header: "Vendor", accessorKey: "vendor_name" },
+    { header: "Quantity", accessorKey: "total_qnty" },
 
     {
       header: "Actions",
@@ -102,15 +106,16 @@ const PurchaseComponentList = () => {
           >
             <Edit className="h-4 w-4" />
           </Button>
-
-          <Button
-            size="icon"
-            variant="outline"
-            onClick={() => handleDeleteClick(row.original.id)}
-            disabled={deleting}
-          >
-            <Trash2 className="h-4 w-4" />
-          </Button>
+          {userType != 1 && (
+            <Button
+              size="icon"
+              variant="outline"
+              onClick={() => handleDeleteClick(row.original.id)}
+              disabled={deleting}
+            >
+              <Trash2 className="h-4 w-4" />
+            </Button>
+          )}
         </div>
       ),
       enableSorting: false,
@@ -156,11 +161,11 @@ const PurchaseComponentList = () => {
                   <TableRow>
                     <TableHead>Name</TableHead>
                     <TableHead>Category</TableHead>
-                    <TableHead>Rate</TableHead>
+                    {/* <TableHead>Rate</TableHead> */}
                     <TableHead>Brand</TableHead>
                     <TableHead>Unit</TableHead>
                     <TableHead>Quantity</TableHead>
-                    <TableHead>Amount</TableHead>
+                    {/* <TableHead>Amount</TableHead> */}
                   </TableRow>
                 </TableHeader>
 
@@ -170,14 +175,14 @@ const PurchaseComponentList = () => {
                       <TableRow key={sub.id}>
                         <TableCell>{sub.component_name}</TableCell>
                         <TableCell>{sub.component_category}</TableCell>
-                        <TableCell>{sub.component_rate}</TableCell>
+                        {/* <TableCell>{sub.component_rate}</TableCell> */}
                         <TableCell>{sub.component_brand}</TableCell>
                         <TableCell>{sub.component_unit}</TableCell>
                         <TableCell>{sub.purchase_c_sub_qnty}</TableCell>
-                        <TableCell>
+                        {/* <TableCell>
                           {Number(sub.component_rate) *
                             Number(sub.purchase_c_sub_qnty)}
-                        </TableCell>
+                        </TableCell> */}
                       </TableRow>
                     ))
                   ) : (
@@ -194,11 +199,11 @@ const PurchaseComponentList = () => {
                     <TableCell />
                     <TableCell />
                     <TableCell className="font-semibold">Total</TableCell>
-                    <TableCell className="font-semibold">{totalRate}</TableCell>
+                    {/* <TableCell className="font-semibold">{totalRate}</TableCell> */}
                     <TableCell className="font-semibold">{totalQty}</TableCell>
-                    <TableCell className="font-semibold">
+                    {/* <TableCell className="font-semibold">
                       {totalAmount}
-                    </TableCell>
+                    </TableCell> */}
                   </TableRow>
                 </TableFooter>
               </Table>

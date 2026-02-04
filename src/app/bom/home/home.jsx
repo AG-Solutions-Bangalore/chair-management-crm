@@ -95,7 +95,7 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
         <MetricCard
           icon={Package}
           label="Total Products"
@@ -108,13 +108,18 @@ export default function Dashboard() {
         />
         <MetricCard
           icon={Clock}
+          label="Pending"
+          value={data.total_pending_orders}
+        />
+        <MetricCard
+          icon={Clock}
           label="In Production"
           value={data.total_in_production_orders}
         />
         <MetricCard
           icon={TrendingUp}
-          label="Dispatched Today"
-          value={data.recent_dispatch?.length || 0}
+          label="Read For Dispatch"
+          value={data.total_ready_for_dispatch_orders || 0}
         />
       </div>
       {/* 
@@ -246,7 +251,7 @@ export default function Dashboard() {
             Order Status Distribution
           </h2>
           <ResponsiveContainer width="100%" height={300}>
-            <PieChart>
+            <PieChart style={{ outline: "none" }}>
               <Pie
                 data={data.graph1}
                 dataKey="total"
@@ -255,7 +260,11 @@ export default function Dashboard() {
                 label={({ order_status, total }) => `${order_status}: ${total}`}
               >
                 {data.graph1.map((_, i) => (
-                  <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />
+                  <Cell
+                    key={i}
+                    fill={PIE_COLORS[i % PIE_COLORS.length]}
+                    style={{ outline: "none" }}
+                  />
                 ))}
               </Pie>
             </PieChart>
@@ -268,7 +277,7 @@ export default function Dashboard() {
 
 function MetricCard({ icon: Icon, label, value }) {
   return (
-    <div className="bg-white rounded-2xl border p-6">
+    <div className="bg-white rounded-xl border px-2 py-4">
       <div className="flex items-center justify-between">
         <div>
           <p className="text-sm text-slate-600">{label}</p>

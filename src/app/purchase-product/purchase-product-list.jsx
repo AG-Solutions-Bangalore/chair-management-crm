@@ -12,14 +12,6 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { PURCHASE_PRODUCT_API } from "@/constants/apiConstants";
-import { useApiMutation } from "@/hooks/useApiMutation";
-import { useGetApiMutation } from "@/hooks/useGetApiMutation";
-import { Edit, Trash2 } from "lucide-react";
-import moment from "moment";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
 import {
   Table,
   TableBody,
@@ -29,9 +21,19 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { PURCHASE_PRODUCT_API } from "@/constants/apiConstants";
+import { useApiMutation } from "@/hooks/useApiMutation";
+import { useGetApiMutation } from "@/hooks/useGetApiMutation";
+import { Edit, Trash2 } from "lucide-react";
+import moment from "moment";
+import { useState } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 const PurchaseProductList = () => {
   const navigate = useNavigate();
+  const userType = useSelector((state) => state.auth?.user?.user_type);
 
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
@@ -73,19 +75,21 @@ const PurchaseProductList = () => {
   };
 
   const columns = [
-    { header: "Product No", accessorKey: "purchase_p_no" },
-    { header: "Ref", accessorKey: "purchase_p_ref", enableSorting: false },
+    {
+      header: "S.No",
+      cell: ({ row }) => row.index + 1,
+    },
+    { header: "Ref", accessorKey: "purchase_p_ref"},
     {
       header: "Date",
       accessorKey: "purchase_p_date",
-      enableSorting: false,
       cell: ({ row }) => {
         const date = row.original.purchase_p_date ?? "";
         return date ? moment(date).format("DD MMM YYYY") : "";
       },
     },
-    { header: "Vendor", accessorKey: "vendor_name", enableSorting: false },
-    { header: "Quantity", accessorKey: "total_qnty", enableSorting: false },
+    { header: "Vendor", accessorKey: "vendor_name"},
+    { header: "Quantity", accessorKey: "total_qnty"},
     {
       header: "Actions",
       accessorKey: "actions",
@@ -100,15 +104,16 @@ const PurchaseProductList = () => {
           >
             <Edit className="h-4 w-4" />
           </Button>
-
-          <Button
-            size="icon"
-            variant="outline"
-            onClick={() => handleDeleteClick(row.original.id)}
-            disabled={deleting}
-          >
-            <Trash2 className="h-4 w-4" />
-          </Button>
+          {userType != 1 && (
+            <Button
+              size="icon"
+              variant="outline"
+              onClick={() => handleDeleteClick(row.original.id)}
+              disabled={deleting}
+            >
+              <Trash2 className="h-4 w-4" />
+            </Button>
+          )}
         </div>
       ),
       enableSorting: false,
@@ -154,9 +159,9 @@ const PurchaseProductList = () => {
                   <TableRow>
                     <TableHead>Name</TableHead>
                     <TableHead>Category</TableHead>
-                    <TableHead>Rate</TableHead>
+                    {/* <TableHead>Rate</TableHead> */}
                     <TableHead>Quantity</TableHead>
-                    <TableHead>Amount</TableHead>
+                    {/* <TableHead>Amount</TableHead> */}
                   </TableRow>
                 </TableHeader>
 
@@ -166,12 +171,12 @@ const PurchaseProductList = () => {
                       <TableRow key={sub.id}>
                         <TableCell>{sub.product_name}</TableCell>
                         <TableCell>{sub.product_category}</TableCell>
-                        <TableCell>{sub.product_rate}</TableCell>
+                        {/* <TableCell>{sub.product_rate}</TableCell> */}
                         <TableCell>{sub.purchase_p_sub_qnty}</TableCell>
-                        <TableCell>
+                        {/* <TableCell>
                           {Number(sub.product_rate) *
                             Number(sub.purchase_p_sub_qnty)}
-                        </TableCell>
+                        </TableCell> */}
                       </TableRow>
                     ))
                   ) : (
@@ -186,11 +191,11 @@ const PurchaseProductList = () => {
                   <TableRow>
                     <TableCell />
                     <TableCell className="font-semibold">Total</TableCell>
-                    <TableCell className="font-semibold">{totalRate}</TableCell>
+                    {/* <TableCell className="font-semibold">{totalRate}</TableCell> */}
                     <TableCell className="font-semibold">{totalQty}</TableCell>
-                    <TableCell className="font-semibold">
+                    {/* <TableCell className="font-semibold">
                       {totalAmount}
-                    </TableCell>
+                    </TableCell> */}
                   </TableRow>
                 </TableFooter>
               </Table>

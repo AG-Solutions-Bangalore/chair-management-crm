@@ -9,7 +9,6 @@ import { useGetApiMutation } from "@/hooks/useGetApiMutation";
 import { Edit } from "lucide-react";
 import { useMemo, useState } from "react";
 import ProductForm from "./product-form";
-// import BankForm from "./bank-form";
 
 const ProductList = () => {
   const [pageIndex, setPageIndex] = useState(0);
