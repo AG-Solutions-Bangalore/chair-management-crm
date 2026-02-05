@@ -107,7 +107,7 @@ const OrderList = () => {
       header: "S.No",
       cell: ({ row }) => row.index + 1,
     },
-    { header: "Ref", accessorKey: "order_ref" },
+    { header: "Order Ref", accessorKey: "order_ref" },
     {
       header: "Order Date",
       accessorKey: "order_date",
@@ -117,7 +117,7 @@ const OrderList = () => {
       },
     },
     {
-      header: "Vendor Name",
+      header: "Vendor",
       accessorKey: "vendor_name",
     },
     {
@@ -130,7 +130,7 @@ const OrderList = () => {
     },
     { header: "Quantity", accessorKey: "total_qnty" },
     {
-      header: "Total Amount",
+      header: "Amount",
       accessorKey: "total_amount",
     },
     {
@@ -184,6 +184,7 @@ const OrderList = () => {
             <Button
               size="icon"
               variant="outline"
+              title="Edit Order"
               onClick={() => navigate(`/order/edit/${row.original.id}`)}
             >
               <Edit className="h-4 w-4" />
@@ -192,6 +193,7 @@ const OrderList = () => {
               <Button
                 size="icon"
                 variant="outline"
+                title="Create Order Production"
                 onClick={() =>
                   navigate(`/order/production/create/${row.original.id}`)
                 }
@@ -204,6 +206,7 @@ const OrderList = () => {
               variant="outline"
               onClick={() => handleDeleteClick(row.original.id)}
               disabled={deleting}
+              title="Delete Order"
             >
               <Trash2 className="h-4 w-4" />
             </Button>
@@ -307,8 +310,8 @@ const OrderList = () => {
                   <Table className="border">
                     <TableHeader className="border-b">
                       <TableRow>
-                        <TableHead>Ref</TableHead>
-                        <TableHead>Date</TableHead>
+                        <TableHead>Production Ref</TableHead>
+                        <TableHead>Production Date</TableHead>
                         <TableHead>Product Name</TableHead>
                         <TableHead>Quantity</TableHead>
                         <TableHead>Status</TableHead>
@@ -320,7 +323,11 @@ const OrderList = () => {
                         row.production.map((sub) => (
                           <TableRow key={sub.id}>
                             <TableCell>{sub.production_p_ref}</TableCell>
-                            <TableCell>{sub.production_p_date}</TableCell>
+                            <TableCell>
+                              {moment(sub.production_p_date).format(
+                                "DD MMM YYYY",
+                              )}
+                            </TableCell>
                             <TableCell>{sub.product_name}</TableCell>
                             <TableCell>{sub.production_p_qnty}</TableCell>
                             <TableCell>{sub.production_p_status}</TableCell>

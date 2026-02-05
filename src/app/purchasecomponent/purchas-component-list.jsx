@@ -80,9 +80,9 @@ const PurchaseComponentList = () => {
       header: "S.No",
       cell: ({ row }) => row.index + 1,
     },
-    { header: "Ref", accessorKey: "purchase_c_ref"},
+    { header: "Purchase Ref", accessorKey: "purchase_c_ref" },
     {
-      header: "Date",
+      header: "Purchase Date",
       accessorKey: "purchase_c_date",
       cell: ({ row }) => {
         const date = row.original.purchase_c_date ?? "";
@@ -100,6 +100,7 @@ const PurchaseComponentList = () => {
           <Button
             size="icon"
             variant="outline"
+            title="Edit Purchase Component"
             onClick={() =>
               navigate(`/purchase-component/edit/${row.original.id}`)
             }
@@ -110,6 +111,7 @@ const PurchaseComponentList = () => {
             <Button
               size="icon"
               variant="outline"
+              title="Delete Purchase Component"
               onClick={() => handleDeleteClick(row.original.id)}
               disabled={deleting}
             >
@@ -159,7 +161,7 @@ const PurchaseComponentList = () => {
               <Table className="border">
                 <TableHeader className="border-b">
                   <TableRow>
-                    <TableHead>Name</TableHead>
+                    <TableHead>Component</TableHead>
                     <TableHead>Category</TableHead>
                     {/* <TableHead>Rate</TableHead> */}
                     <TableHead>Brand</TableHead>

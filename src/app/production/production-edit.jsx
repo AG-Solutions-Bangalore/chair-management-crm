@@ -135,43 +135,45 @@ const ProductionEditDialog = ({ open, onClose, productionId }) => {
                 )}
               </div>
 
-              <div>
-                <label className="text-sm font-medium">Quantity *</label>
-                <Input
-                  value={data.production_p_qnty}
-                  onChange={(e) =>
-                    setData({
-                      ...data,
-                      production_p_qnty: e.target.value.replace(/\D/g, ""),
-                    })
-                  }
-                />
-                {errors.production_p_qnty && (
-                  <p className="text-xs text-red-500 mt-1">
-                    {errors.production_p_qnty}
-                  </p>
-                )}
-              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <label className="text-sm font-medium">Quantity *</label>
+                  <Input
+                    value={data.production_p_qnty}
+                    onChange={(e) =>
+                      setData({
+                        ...data,
+                        production_p_qnty: e.target.value.replace(/\D/g, ""),
+                      })
+                    }
+                  />
+                  {errors.production_p_qnty && (
+                    <p className="text-xs text-red-500 mt-1">
+                      {errors.production_p_qnty}
+                    </p>
+                  )}
+                </div>
 
-              <div>
-                <label className="text-sm font-medium">Amount *</label>
-                <Input
-                  value={data.production_p_amount}
-                  onChange={(e) =>
-                    setData({
-                      ...data,
-                      production_p_amount: e.target.value.replace(
-                        /[^0-9.]/g,
-                        "",
-                      ),
-                    })
-                  }
-                />
-                {errors.production_p_amount && (
-                  <p className="text-xs text-red-500 mt-1">
-                    {errors.production_p_amount}
-                  </p>
-                )}
+                <div>
+                  <label className="text-sm font-medium">Amount *</label>
+                  <Input
+                    value={data.production_p_amount}
+                    onChange={(e) =>
+                      setData({
+                        ...data,
+                        production_p_amount: e.target.value.replace(
+                          /[^0-9.]/g,
+                          "",
+                        ),
+                      })
+                    }
+                  />
+                  {errors.production_p_amount && (
+                    <p className="text-xs text-red-500 mt-1">
+                      {errors.production_p_amount}
+                    </p>
+                  )}
+                </div>
               </div>
 
               <div>

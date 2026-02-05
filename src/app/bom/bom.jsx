@@ -82,8 +82,12 @@ const BomList = () => {
   };
 
   const columns = [
+    {
+      header: "S.No",
+      cell: ({ row }) => row.index + 1,
+    },
     { header: "Code", accessorKey: "product_code" },
-    { header: "Name", accessorKey: "product_name" },
+    { header: "Product", accessorKey: "product_name" },
     {
       header: "Category",
       accessorKey: "product_category",
@@ -110,6 +114,7 @@ const BomList = () => {
           <Button
             size="icon"
             variant="outline"
+            title="Edit Bom"
             onClick={() => handleEdit(row.original.id)}
           >
             <Edit className="h-4 w-4" />
@@ -118,6 +123,7 @@ const BomList = () => {
             <Button
               size="icon"
               variant="outline"
+              title="Delete Bom"
               onClick={() => handleDeleteClick(row.original.id)}
               disabled={deleting}
             >
@@ -166,7 +172,7 @@ const BomList = () => {
               <Table className="border">
                 <TableHeader className="border-b">
                   <TableRow>
-                    <TableHead>Component Name</TableHead>
+                    <TableHead>Component</TableHead>
                     <TableHead>Category</TableHead>
                     <TableHead>Brand</TableHead>
                     <TableHead>Unit</TableHead>

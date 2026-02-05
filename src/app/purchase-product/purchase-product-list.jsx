@@ -79,17 +79,17 @@ const PurchaseProductList = () => {
       header: "S.No",
       cell: ({ row }) => row.index + 1,
     },
-    { header: "Ref", accessorKey: "purchase_p_ref"},
+    { header: "Product Ref", accessorKey: "purchase_p_ref" },
     {
-      header: "Date",
+      header: "Purchase Date",
       accessorKey: "purchase_p_date",
       cell: ({ row }) => {
         const date = row.original.purchase_p_date ?? "";
         return date ? moment(date).format("DD MMM YYYY") : "";
       },
     },
-    { header: "Vendor", accessorKey: "vendor_name"},
-    { header: "Quantity", accessorKey: "total_qnty"},
+    { header: "Vendor", accessorKey: "vendor_name" },
+    { header: "Quantity", accessorKey: "total_qnty" },
     {
       header: "Actions",
       accessorKey: "actions",
@@ -98,6 +98,7 @@ const PurchaseProductList = () => {
           <Button
             size="icon"
             variant="outline"
+            title="Edit Purchase Product"
             onClick={() =>
               navigate(`/purchase-product/edit/${row.original.id}`)
             }
@@ -108,6 +109,7 @@ const PurchaseProductList = () => {
             <Button
               size="icon"
               variant="outline"
+              title="Delete Purchase Product"
               onClick={() => handleDeleteClick(row.original.id)}
               disabled={deleting}
             >
@@ -157,7 +159,7 @@ const PurchaseProductList = () => {
               <Table className="border">
                 <TableHeader className="border-b">
                   <TableRow>
-                    <TableHead>Name</TableHead>
+                    <TableHead>Product</TableHead>
                     <TableHead>Category</TableHead>
                     {/* <TableHead>Rate</TableHead> */}
                     <TableHead>Quantity</TableHead>

@@ -42,8 +42,12 @@ const ProductList = () => {
   };
 
   const columns = [
+    {
+      header: "S.No",
+      cell: ({ row }) => row.index + 1,
+    },
     { header: "Code", accessorKey: "product_code" },
-    { header: "Name", accessorKey: "product_name" },
+    { header: "Product", accessorKey: "product_name" },
     { header: "Category", accessorKey: "product_category" },
     { header: "Description", accessorKey: "product_description" },
     { header: "Rate", accessorKey: "product_rate" },
@@ -67,6 +71,7 @@ const ProductList = () => {
         <Button
           size="icon"
           variant="outline"
+          title="Edit Product"
           onClick={() => handleEdit(row.original.id)}
         >
           <Edit className="h-4 w-4" />

@@ -84,23 +84,23 @@ const NAVIGATION_CONFIG = {
       url: "/production",
       icon: LayoutGrid,
     },
-    REPORT: {
-      title: "Report",
-      url: "#2",
-      icon: Settings,
-      items: [
-        {
-          title: "Report1",
-          url: "",
-          icon: LayoutGrid,
-        },
-        {
-          title: "Report2",
-          url: "",
-          icon: LayoutGrid,
-        },
-      ],
-    },
+    // REPORT: {
+    //   title: "Report",
+    //   url: "#2",
+    //   icon: Settings,
+    //   items: [
+    //     {
+    //       title: "Report1",
+    //       url: "",
+    //       icon: LayoutGrid,
+    //     },
+    //     {
+    //       title: "Report2",
+    //       url: "",
+    //       icon: LayoutGrid,
+    //     },
+    //   ],
+    // },
     SETTINGS: {
       title: "Settings",
       url: "/settings",

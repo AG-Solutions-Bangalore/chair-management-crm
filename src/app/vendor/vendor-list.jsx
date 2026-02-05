@@ -41,7 +41,11 @@ const VendorList = () => {
     );
   };
   const columns = [
-    { header: "Name", accessorKey: "vendor_name" },
+    {
+      header: "S.No",
+      cell: ({ row }) => row.index + 1,
+    },
+    { header: "Vendor", accessorKey: "vendor_name" },
     { header: "Contact Name", accessorKey: "vendor_contact_name" },
     { header: "Email", accessorKey: "vendor_email" },
     { header: "Mobile", accessorKey: "vendor_mobile" },
@@ -87,6 +91,7 @@ const VendorList = () => {
         <Button
           size="icon"
           variant="outline"
+          title="Edit Vendor"
           onClick={() => navigate(`/vendor/edit/${row.original.id}`)}
         >
           <Edit className="h-4 w-4" />
