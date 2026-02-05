@@ -103,7 +103,7 @@ const ProductionList = () => {
     { header: "Production Ref", accessorKey: "production_p_ref" },
     { header: "Order Ref", accessorKey: "order_ref" },
     {
-      header: "Date",
+      header: "Production Date",
       accessorKey: "production_p_date",
       enableSorting: false,
       cell: ({ row }) => {
@@ -113,7 +113,7 @@ const ProductionList = () => {
     },
 
     {
-      header: "Product Name",
+      header: "Product",
       accessorKey: "product_name",
       enableSorting: false,
     },
@@ -172,6 +172,7 @@ const ProductionList = () => {
             <Button
               size="icon"
               variant="outline"
+              title="Edit Production"
               onClick={() => {
                 setSelectedId(row.original.id);
                 setOpen(true);
@@ -183,6 +184,7 @@ const ProductionList = () => {
               <Button
                 size="icon"
                 variant="outline"
+                title="Delete Production"
                 onClick={() => handleDeleteClick(row.original.id)}
                 disabled={deleting}
               >

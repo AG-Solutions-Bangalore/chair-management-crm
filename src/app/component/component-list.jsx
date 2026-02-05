@@ -41,13 +41,17 @@ const ComponentList = () => {
   };
 
   const columns = [
+    {
+      header: "S.No",
+      cell: ({ row }) => row.index + 1,
+    },
     { header: "Code", accessorKey: "component_code" },
-    { header: "Name", accessorKey: "component_name" },
+    { header: "Component", accessorKey: "component_name" },
     { header: "Category", accessorKey: "component_category" },
     { header: "Brand", accessorKey: "component_brand" },
     { header: "Unit", accessorKey: "component_unit" },
-    { header: "Mini Stock", accessorKey: "component_mini_stock" },
     { header: "Rate", accessorKey: "component_rate" },
+    { header: "Mini Stock", accessorKey: "component_mini_stock" },
     { header: "Specification", accessorKey: "component_specification" },
     {
       header: "Status",
@@ -69,6 +73,7 @@ const ComponentList = () => {
         <Button
           size="icon"
           variant="outline"
+          title="Edit Component"
           onClick={() => navigate(`/component/edit/${row.original.id}`)}
         >
           <Edit className="h-4 w-4" />

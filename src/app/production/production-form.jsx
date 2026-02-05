@@ -1,5 +1,3 @@
-"use client";
-
 import PageHeader from "@/components/common/page-header";
 import LoadingBar from "@/components/loader/loading-bar";
 import { Button } from "@/components/ui/button";
@@ -94,11 +92,11 @@ const ProductionForm = () => {
   const validate = () => {
     const err = {};
 
-    if (!data.production_p_date) err.production_p_date = "Required";
+    if (!data.production_p_date) err.production_p_date = "Date Required";
 
     data.production.forEach((p, pi) => {
       if (!p.production_p_product_id)
-        err[`production_${pi}`] = "Production required";
+        err[`production_${pi}`] = "Product required";
       p.subs1.forEach((c, ci) => {
         if (
           !c.production_c_component_id ||
@@ -275,36 +273,36 @@ const ProductionForm = () => {
           icon={Package}
           title="Create Production"
           rightContent={
-            <>
-              <Button
-                variant="outline"
-                type="button"
-                onClick={() => navigate(-1)}
-              >
-                Back
-              </Button>
-              <Button type="submit" className="ml-3">
-                {" "}
-                {submitloading ? "Submiting..." : "Submit"}
-              </Button>
-            </>
+            <div className="flex ">
+              <div>
+                <label className="text-sm font-medium">Order Date *</label>
+
+                <Input
+                  type="date"
+                  value={data.production_p_date}
+                  onChange={(e) =>
+                    setData({ ...data, production_p_date: e.target.value })
+                  }
+                />
+                <ErrorText message={errors.production_p_date} />
+              </div>
+              <div className="mt-6 ml-2">
+                <Button
+                  variant="outline"
+                  type="button"
+                  onClick={() => navigate(-1)}
+                >
+                  Back
+                </Button>
+                <Button type="submit" className="ml-3">
+                  {" "}
+                  {submitloading ? "Submiting..." : "Submit"}
+                </Button>
+              </div>
+            </div>
           }
         />
 
-        <Card className="p-4 grid md:grid-cols-3 gap-4">
-          <div>
-            <label className="text-sm font-medium">Order Date *</label>
-
-            <Input
-              type="date"
-              value={data.production_p_date}
-              onChange={(e) =>
-                setData({ ...data, production_p_date: e.target.value })
-              }
-            />
-            <ErrorText message={errors.production_p_date} />
-          </div>
-        </Card>
         <Card className="p-4 mt-5">
           {data.production.map((p, pi) => {
             const selectedComponentIds = p.subs1.map(
@@ -346,7 +344,7 @@ const ProductionForm = () => {
                         ))}
                       </SelectContent>
                     </Select>
-                    <ErrorText message={errors[`product_${pi}`]} />
+                    <ErrorText message={errors[`production_${pi}`]} />
                   </div>
 
                   <Input
@@ -429,7 +427,7 @@ const ProductionForm = () => {
                             </SelectContent>
                           </Select>
                           <ErrorText
-                            message={errors[`component_${pi}_${ci}`]}
+                            message={errors[`production_${pi}_${ci}`]}
                           />
                         </TableCell>
 
