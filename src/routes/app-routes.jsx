@@ -26,6 +26,8 @@ import { Route, Routes } from "react-router-dom";
 import AuthRoute from "./auth-route";
 import ProtectedRoute from "./protected-route";
 import ProductionEdit from "../app/production/production-edit";
+import ProductStockReport from "@/app/report/product/productstock-report";
+import ComponentStockReport from "@/app/report/component/componentstock-report";
 
 function AppRoutes() {
   return (
@@ -229,7 +231,22 @@ function AppRoutes() {
               </Suspense>
             }
           />
-    
+          <Route
+            path="/report/productstock"
+            element={
+              <Suspense fallback={<LoadingBar />}>
+                <ProductStockReport />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/report/componentstock"
+            element={
+              <Suspense fallback={<LoadingBar />}>
+                <ComponentStockReport />
+              </Suspense>
+            }
+          />
         </Route>
 
         <Route path="*" element={<NotFound />} />
