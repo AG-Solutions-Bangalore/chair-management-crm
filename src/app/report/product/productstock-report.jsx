@@ -84,6 +84,12 @@ const ProductStockReport = () => {
       <span className={num < 0 ? "text-red-600 font-semibold" : ""}>{num}</span>
     );
   };
+  const productsWithAll = useMemo(() => {
+    const products = productMaster?.data || [];
+
+    return [{ id: "__ALL__", product_name: "All Products" }, ...products];
+  }, [productMaster]);
+
   const handlePrintPdf = useReactToPrint({
     content: () => containerRef.current,
     documentTitle: "Product_Stock_Report",
@@ -135,13 +141,19 @@ const ProductStockReport = () => {
 
           <div className="min-w-[240px]">
             <label className="block text-sm font-medium mb-1">Product</label>
-            <Select value={selectedProduct} onValueChange={setSelectedProduct}>
+            <Select
+              value={selectedProduct || "__ALL__"}
+              onValueChange={(value) =>
+                setSelectedProduct(value === "__ALL__" ? "" : value)
+              }
+            >
               <SelectTrigger>
-                <SelectValue placeholder="Select Product" />
+                <SelectValue placeholder="All Products" />
               </SelectTrigger>
+
               <SelectContent>
-                {productMaster?.data?.map((p) => (
-                  <SelectItem key={p.id} value={p.id}>
+                {productsWithAll.map((p) => (
+                  <SelectItem key={p.id} value={String(p.id)}>
                     {p.product_name}
                   </SelectItem>
                 ))}
