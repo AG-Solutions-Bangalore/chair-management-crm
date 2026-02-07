@@ -32,6 +32,11 @@ const ComponentStockReport = () => {
       url: COMPONENTS_API.active,
       queryKey: ["component-active"],
     });
+  const componentWithAll = useMemo(() => {
+    const products = componentData?.data || [];
+
+    return [{ id: "__ALL__", component_name: "All Component" }, ...products];
+  }, [componentData]);
 
   const { trigger: fetchReport, loading: isLoading } = useApiMutation();
 
@@ -137,12 +142,17 @@ const ComponentStockReport = () => {
 
           <div className="min-w-[240px]">
             <label className="block text-sm font-medium mb-1">Component</label>
-            <Select value={selectedProduct} onValueChange={setSelectedProduct}>
+            <Select
+              value={selectedProduct || "__ALL__"}
+              onValueChange={(value) =>
+                setSelectedProduct(value === "__ALL__" ? "" : value)
+              }
+            >
               <SelectTrigger>
                 <SelectValue placeholder="Select Component" />
               </SelectTrigger>
               <SelectContent>
-                {componentData?.data?.map((p) => (
+                {componentWithAll?.map((p) => (
                   <SelectItem key={p.id} value={p.id}>
                     {p.component_name}
                   </SelectItem>
