@@ -246,29 +246,51 @@ export default function Dashboard() {
             row.production_p_status,
           ]}
         />
-        <div className="bg-white rounded-2xl border p-8">
-          <h2 className="text-xl font-semibold mb-6">
+        <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
+          <h2 className="text-lg font-semibold mb-4 text-gray-700">
             Order Status Distribution
           </h2>
-          <ResponsiveContainer width="100%" height={300}>
-            <PieChart style={{ outline: "none" }}>
-              <Pie
-                data={data.graph1}
-                dataKey="total"
-                nameKey="order_status"
-                outerRadius={100}
-                label={({ order_status, total }) => `${order_status}: ${total}`}
-              >
-                {data.graph1.map((_, i) => (
-                  <Cell
-                    key={i}
-                    fill={PIE_COLORS[i % PIE_COLORS.length]}
-                    style={{ outline: "none" }}
-                  />
-                ))}
-              </Pie>
-            </PieChart>
-          </ResponsiveContainer>
+
+          {/* Chart */}
+          <div className="w-full h-[240px] flex justify-center">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={data.graph1}
+                  dataKey="total"
+                  nameKey="order_status"
+                  innerRadius={55}
+                  outerRadius={85}
+                  paddingAngle={2}
+                  labelLine={false}
+                  label={({ percent }) =>
+                    percent > 0 ? `${(percent * 100).toFixed(0)}%` : ""
+                  }
+                >
+                  {data.graph1.map((_, i) => (
+                    <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />
+                  ))}
+                </Pie>
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* Legend */}
+          <div className="mt-5 flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm">
+            {data.graph1.map((item, i) => (
+              <div key={i} className="flex items-center gap-2">
+                <div
+                  className="w-3 h-3 rounded-full"
+                  style={{
+                    backgroundColor: PIE_COLORS[i % PIE_COLORS.length],
+                  }}
+                />
+                <span className="text-gray-600">
+                  {item.order_status} ({item.total})
+                </span>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
