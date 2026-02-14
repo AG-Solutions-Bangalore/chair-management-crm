@@ -87,6 +87,9 @@ export const POPUP_API = {
 export const REPORT_API = {
   productstock: "/product-stock-report",
   componentstock: "/component-stock-report",
+  purchaseProductReport: "/purchase-product-report",
+  purchaseComponentReport: "/purchase-component-report",
+  orderReport: "/order-report",
 };
 export const PR_API = {
   list: "/pr",
