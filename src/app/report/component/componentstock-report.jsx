@@ -169,7 +169,7 @@ const ComponentStockReport = () => {
           Component Stock Report
         </h2>
         <div className="mx-2 flex justify-center">
-          <table className="w-full border-collapse border max-w-6xl border-black">
+          <table className="w-full border-collapse border max-w-6xl border-black text-sm">
             <thead className="bg-gray-100">
               <tr>
                 {[

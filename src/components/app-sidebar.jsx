@@ -99,6 +99,21 @@ const NAVIGATION_CONFIG = {
           url: "/report/componentstock",
           icon: LayoutGrid,
         },
+        {
+          title: "Purchase Product",
+          url: "/report/purchaseproduct",
+          icon: LayoutGrid,
+        },
+        {
+          title: "Purchase Component",
+          url: "/report/purchasecomponent",
+          icon: LayoutGrid,
+        },
+        {
+          title: "Order",
+          url: "/report/order",
+          icon: LayoutGrid,
+        },
       ],
     },
     SETTINGS: {
