@@ -49,7 +49,9 @@ const ProductList = () => {
     { header: "Code", accessorKey: "product_code" },
     { header: "Product", accessorKey: "product_name" },
     { header: "Category", accessorKey: "product_category" },
-    { header: "Description", accessorKey: "product_description" },
+    { header: "Color", accessorKey: "product_color" },
+    { header: "Vendor", accessorKey: "vendor_name" },
+    // { header: "Description", accessorKey: "product_description" },
     { header: "Rate", accessorKey: "product_rate" },
     {
       header: "Status",

@@ -9,9 +9,17 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { PRODUCT_API } from "@/constants/apiConstants";
+import { PRODUCT_API, VENDOR_API } from "@/constants/apiConstants";
 import { useApiMutation } from "@/hooks/use-mutation";
+import { useGetApiMutation } from "@/hooks/useGetApiMutation";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -22,6 +30,8 @@ const initialState = {
   product_category: "",
   product_rate: "",
   product_description: "",
+  product_color: "",
+  vendor_id: "",
   product_status: "Active",
 };
 const ProductForm = ({ isOpen, onClose, productId }) => {
@@ -31,7 +41,10 @@ const ProductForm = ({ isOpen, onClose, productId }) => {
   const { trigger: fetchProduct, loading } = useApiMutation();
   const { trigger: submitProduct, loading: submitLoading } = useApiMutation();
   const queryClient = useQueryClient();
-
+  const { data: vendorData } = useGetApiMutation({
+    url: VENDOR_API.active,
+    queryKey: ["vendor-active-product"],
+  });
   useEffect(() => {
     if (!isOpen) return;
 
@@ -52,6 +65,8 @@ const ProductForm = ({ isOpen, onClose, productId }) => {
           product_name: res.data.product_name || "",
           product_category: res.data.product_category || "",
           product_rate: res.data.product_rate || "",
+          product_color: res.data.product_color || "",
+          vendor_id: res.data.vendor_id || "",
           product_description: res.data.product_description || "",
           product_status: res.data.product_status || "Active",
         });
@@ -72,6 +87,7 @@ const ProductForm = ({ isOpen, onClose, productId }) => {
       newErrors.product_category = "Product Category is Required";
     if (!data.product_rate)
       newErrors.product_rate = " Product Rate is Required";
+    if (!data.vendor_id) newErrors.vendor_id = "Vendor is Required";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -149,18 +165,54 @@ const ProductForm = ({ isOpen, onClose, productId }) => {
             <p className="text-xs text-red-500">{errors.product_name}</p>
           )}
         </div>
-
+        <div className="grid grid-cols-2 gap-2">
+          <div>
+            <label className="text-sm font-medium">Rate *</label>
+            <Input
+              placeholder="Rate"
+              type="number"
+              min={0}
+              value={data.product_rate}
+              onChange={(e) =>
+                setData({ ...data, product_rate: e.target.value })
+              }
+            />
+            {errors.product_rate && (
+              <p className="text-xs text-red-500">{errors.product_rate}</p>
+            )}
+          </div>
+          <div>
+            <label className="text-sm font-medium">Color</label>
+            <Input
+              placeholder="Enter Color"
+              min={0}
+              value={data.product_color}
+              onChange={(e) =>
+                setData({ ...data, product_color: e.target.value })
+              }
+            />
+          </div>
+        </div>
         <div>
-          <label className="text-sm font-medium">Rate *</label>
-          <Input
-            placeholder="Rate"
-            type="number"
-            min={0}
-            value={data.product_rate}
-            onChange={(e) => setData({ ...data, product_rate: e.target.value })}
-          />
-          {errors.product_rate && (
-            <p className="text-xs text-red-500">{errors.product_rate}</p>
+          <label className="text-sm font-medium">Vendor *</label>
+          <Select
+            value={data.vendor_id}
+            onValueChange={(v) => setData({ ...data, vendor_id: v })}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select Vendor" />
+            </SelectTrigger>
+            <SelectContent>
+              {vendorData?.data?.map((v) => (
+                <SelectItem key={v.id} value={String(v.id)}>
+                  {v.vendor_name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          {errors.vendor_id && (
+            <p className="text-xs text-red-500 mt-1">{errors.vendor_id}</p>
           )}
         </div>
         <div>

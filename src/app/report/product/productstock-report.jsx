@@ -175,6 +175,8 @@ const ProductStockReport = () => {
                 {[
                   "Product Name",
                   "Category",
+                  "Color",
+                  "Vendor",
                   "Opening Stock",
                   "Purchase",
                   "Production",
@@ -207,8 +209,14 @@ const ProductStockReport = () => {
                     <td className="border border-black px-2 py-2">
                       {row.product_name}
                     </td>
-                    <td className="border border-black px-2 py-2 text-center">
+                    <td className="border border-black px-2 py-2 ">
                       {row.product_category}
+                    </td>
+                    <td className="border border-black px-2 py-2">
+                      {row.product_color}
+                    </td>
+                    <td className="border border-black px-2 py-2">
+                      {row.vendor_name}
                     </td>
                     <td className="border border-black px-2 py-2 text-right">
                       {renderNumber(row.openingStock)}

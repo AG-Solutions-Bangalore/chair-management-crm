@@ -12,9 +12,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { COMPONENTS_API } from "@/constants/apiConstants";
+import { Textarea } from "@/components/ui/textarea";
+import { COMPONENTS_API, VENDOR_API } from "@/constants/apiConstants";
 import { COMPONENT_UNITS } from "@/constants/component-unit";
 import { useApiMutation } from "@/hooks/use-mutation";
+import { useGetApiMutation } from "@/hooks/useGetApiMutation";
 import { useQueryClient } from "@tanstack/react-query";
 import { Boxes } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -27,6 +29,8 @@ const initialState = {
   component_category: "",
   component_unit: "",
   component_mini_stock: "",
+  component_color: "",
+  vendor_id: "",
   component_rate: "",
   component_specification: null,
   component_brand: null,
@@ -40,7 +44,10 @@ const ComponentForm = () => {
 
   const [data, setData] = useState(initialState);
   const [errors, setErrors] = useState({});
-
+  const { data: vendorData } = useGetApiMutation({
+    url: VENDOR_API.active,
+    queryKey: ["vendor-active-compoennt"],
+  });
   const {
     trigger: fetchComponent,
     loading: fetchLoading,
@@ -60,6 +67,8 @@ const ComponentForm = () => {
         component_code: apiData.component_code ?? "",
         component_name: apiData.component_name ?? "",
         component_category: apiData.component_category ?? "",
+        component_color: apiData.component_color ?? "",
+        vendor_id: apiData.vendor_id ?? "",
         component_unit: apiData.component_unit ?? "",
         component_mini_stock: apiData.component_mini_stock ?? "",
         component_rate: apiData.component_rate ?? "",
@@ -82,6 +91,7 @@ const ComponentForm = () => {
     if (!data.component_name) err.component_name = "Component name is required";
     if (!data.component_category)
       err.component_category = "Category is required";
+    if (!data.vendor_id) err.vendor_id = "Vendor is required";
     if (!data.component_unit) err.component_unit = "Unit is required";
     if (!data.component_mini_stock)
       err.component_mini_stock = "Minimum stock is required";
@@ -184,6 +194,16 @@ const ComponentForm = () => {
             </div>
 
             <div>
+              <label className="text-sm font-medium">Color </label>
+              <Input
+                value={data.component_color || ""}
+                onChange={(e) =>
+                  setData({ ...data, component_color: e.target.value })
+                }
+              />
+            </div>
+
+            <div>
               <label className="text-sm font-medium">Unit *</label>
               <Select
                 value={data.component_unit || ""}
@@ -253,10 +273,32 @@ const ComponentForm = () => {
                 }
               />
             </div>
-
             <div>
+              <label className="text-sm font-medium">Vendor *</label>
+              <Select
+                value={data.vendor_id}
+                onValueChange={(v) => setData({ ...data, vendor_id: v })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select Vendor" />
+                </SelectTrigger>
+                <SelectContent>
+                  {vendorData?.data?.map((v) => (
+                    <SelectItem key={v.id} value={String(v.id)}>
+                      {v.vendor_name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              {errors.vendor_id && (
+                <p className="text-xs text-red-500 mt-1">{errors.vendor_id}</p>
+              )}
+            </div>
+            <div className="col-span-3">
+              {" "}
               <label className="text-sm font-medium">Specification</label>
-              <Input
+              <Textarea
                 value={data.component_specification || ""}
                 onChange={(e) =>
                   setData({
