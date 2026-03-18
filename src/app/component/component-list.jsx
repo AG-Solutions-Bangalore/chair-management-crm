@@ -55,6 +55,8 @@ const ComponentList = () => {
     { header: "Mini Stock", accessorKey: "component_mini_stock" },
     // { header: "Specification", accessorKey: "component_specification" },
     { header: "Vendor", accessorKey: "vendor_name" },
+    { header: "Damage", accessorKey: "component_damage" },
+
     {
       header: "Status",
       accessorKey: "component_status",
