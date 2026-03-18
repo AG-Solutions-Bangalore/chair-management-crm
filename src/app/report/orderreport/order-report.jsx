@@ -1,4 +1,4 @@
-import * as XLSX from "xlsx";
+import * as XLSX from "xlsx-js-style";
 import moment from "moment";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
@@ -125,6 +125,18 @@ const OrderReport = () => {
     });
 
     const ws = XLSX.utils.json_to_sheet(wsData);
+
+    // ✅ Make header row bold
+    const range = XLSX.utils.decode_range(ws["!ref"]);
+    for (let col = range.s.c; col <= range.e.c; col++) {
+      const cellAddress = XLSX.utils.encode_cell({ r: 0, c: col });
+      if (ws[cellAddress]) {
+        ws[cellAddress].s = {
+          font: { bold: true },
+        };
+      }
+    }
+
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Order Report");
     XLSX.writeFile(wb, `Order_Report_${moment().format("DD-MM-YYYY")}.xlsx`);
