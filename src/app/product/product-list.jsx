@@ -31,6 +31,7 @@ const ProductList = () => {
     params,
   });
   const apiData = data?.data;
+  // console.log(apiData);
   const handleCreate = () => {
     setSelectedId(null);
     setIsDialogOpen(true);
@@ -51,6 +52,7 @@ const ProductList = () => {
     { header: "Category", accessorKey: "product_category" },
     { header: "Color", accessorKey: "product_color" },
     { header: "Vendor", accessorKey: "vendor_name" },
+    { header: "Damage", accessorKey: "product_damage" },
     // { header: "Description", accessorKey: "product_description" },
     { header: "Rate", accessorKey: "product_rate" },
     {

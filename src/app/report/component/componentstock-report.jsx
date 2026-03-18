@@ -177,6 +177,7 @@ const ComponentStockReport = () => {
                   "Category",
                   "Color",
                   "Vendor",
+                  "Damage",
                   "Opening Stock",
                   "Purchase",
                   "Production",
@@ -217,6 +218,9 @@ const ComponentStockReport = () => {
                     </td>
                     <td className="border border-black px-2 py-2">
                       {row.vendor_name}
+                    </td>
+                    <td className="border border-black px-2 py-2 text-right">
+                      {row.component_damage}
                     </td>
                     <td className="border border-black px-2 py-2 text-right">
                       {renderNumber(row.openingStock)}

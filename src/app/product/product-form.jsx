@@ -32,6 +32,7 @@ const initialState = {
   product_description: "",
   product_color: "",
   vendor_id: "",
+  product_damage: "",
   product_status: "Active",
 };
 const ProductForm = ({ isOpen, onClose, productId }) => {
@@ -68,6 +69,7 @@ const ProductForm = ({ isOpen, onClose, productId }) => {
           product_color: res.data.product_color || "",
           vendor_id: res.data.vendor_id || "",
           product_description: res.data.product_description || "",
+          product_damage: res.data.product_damage || "",
           product_status: res.data.product_status || "Active",
         });
       } catch (err) {
@@ -165,7 +167,7 @@ const ProductForm = ({ isOpen, onClose, productId }) => {
             <p className="text-xs text-red-500">{errors.product_name}</p>
           )}
         </div>
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-3 gap-2">
           <div>
             <label className="text-sm font-medium">Rate *</label>
             <Input
@@ -192,6 +194,18 @@ const ProductForm = ({ isOpen, onClose, productId }) => {
               }
             />
           </div>
+          <div>
+            <label className="text-sm font-medium">Damage</label>
+            <Input
+              placeholder="Damage"
+              type="number"
+              min={0}
+              value={data.product_damage}
+              onChange={(e) =>
+                setData({ ...data, product_damage: e.target.value })
+              }
+            />
+          </div>
         </div>
         <div>
           <label className="text-sm font-medium">Vendor *</label>
@@ -215,6 +229,7 @@ const ProductForm = ({ isOpen, onClose, productId }) => {
             <p className="text-xs text-red-500 mt-1">{errors.vendor_id}</p>
           )}
         </div>
+
         <div>
           <label className="text-sm font-medium">Description</label>
 

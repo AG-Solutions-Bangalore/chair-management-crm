@@ -32,6 +32,7 @@ const initialState = {
   component_color: "",
   vendor_id: "",
   component_rate: "",
+  component_damage: "",
   component_specification: null,
   component_brand: null,
   component_status: "Active",
@@ -72,6 +73,7 @@ const ComponentForm = () => {
         component_unit: apiData.component_unit ?? "",
         component_mini_stock: apiData.component_mini_stock ?? "",
         component_rate: apiData.component_rate ?? "",
+        component_damage: apiData.component_damage ?? "",
         component_specification: apiData.component_specification ?? "",
         component_brand: apiData.component_brand ?? "",
         component_status: apiData.component_status ?? "Active",
@@ -295,7 +297,19 @@ const ComponentForm = () => {
                 <p className="text-xs text-red-500 mt-1">{errors.vendor_id}</p>
               )}
             </div>
-            <div className="col-span-3">
+            <div>
+              <label className="text-sm font-medium">Damage</label>
+              <Input
+                placeholder="Damage"
+                type="number"
+                min={0}
+                value={data.component_damage}
+                onChange={(e) =>
+                  setData({ ...data, component_damage: e.target.value })
+                }
+              />
+            </div>
+            <div className="col-span-2">
               {" "}
               <label className="text-sm font-medium">Specification</label>
               <Textarea
