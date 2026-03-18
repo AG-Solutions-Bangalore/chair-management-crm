@@ -10,13 +10,24 @@ import {
 } from "@/components/ui/sidebar";
 import {
   AudioWaveform,
-  Blocks,
   Command,
   GalleryVerticalEnd,
-  LayoutGrid,
   Settings,
   Settings2,
-  Users,
+  LayoutDashboard,
+  Boxes,
+  Package,
+  Layers,
+  Truck,
+  ShoppingCart,
+  Wrench,
+  ClipboardList,
+  Factory,
+  BarChart3,
+  Armchair,
+  PackageCheck,
+  FileDown,
+  Cog,
 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useSelector } from "react-redux";
@@ -26,7 +37,7 @@ const NAVIGATION_CONFIG = {
     DASHBOARD: {
       title: "Dashboard",
       url: "/home",
-      icon: LayoutGrid,
+      icon: LayoutDashboard,
     },
     MASTER: {
       title: "Master",
@@ -36,40 +47,40 @@ const NAVIGATION_CONFIG = {
         {
           title: "Component",
           url: "/component",
-          icon: Users,
+          icon: Wrench,
         },
         {
           title: "Product",
           url: "/product",
-          icon: Users,
+          icon: Package,
         },
 
         {
           title: "BOM",
           url: "/bom",
-          icon: LayoutGrid,
+          icon: Layers,
         },
         {
           title: "Vendor",
           url: "/vendor",
-          icon: LayoutGrid,
+          icon: Truck,
         },
       ],
     },
     PURCHASE: {
       title: "Purchase",
       url: "#1",
-      icon: Settings,
+      icon: ShoppingCart,
       items: [
         {
           title: "Product",
           url: "/purchase-product",
-          icon: LayoutGrid,
+          icon: Package,
         },
         {
           title: "Component",
           url: "/purchase-component",
-          icon: LayoutGrid,
+          icon: Wrench,
         },
       ],
     },
@@ -77,49 +88,49 @@ const NAVIGATION_CONFIG = {
     ORDER: {
       title: "Order",
       url: "/order",
-      icon: LayoutGrid,
+      icon: ClipboardList,
     },
     PRODUCTION: {
       title: "Production",
       url: "/production",
-      icon: LayoutGrid,
+      icon: Factory,
     },
     REPORT: {
       title: "Report",
       url: "#2",
-      icon: Settings,
+      icon: BarChart3,
       items: [
         {
           title: "Product Stock",
           url: "/report/productstock",
-          icon: LayoutGrid,
+          icon: PackageCheck,
         },
         {
           title: "Component Stock",
           url: "/report/componentstock",
-          icon: LayoutGrid,
+          icon: Boxes,
         },
         {
           title: "Purchase Product",
           url: "/report/purchaseproduct",
-          icon: LayoutGrid,
+          icon: FileDown,
         },
         {
           title: "Purchase Component",
           url: "/report/purchasecomponent",
-          icon: LayoutGrid,
+          icon: FileDown,
         },
         {
           title: "Order",
           url: "/report/order",
-          icon: LayoutGrid,
+          icon: ClipboardList,
         },
       ],
     },
     SETTINGS: {
       title: "Settings",
       url: "/settings",
-      icon: Blocks,
+      icon: Cog,
     },
   },
 };
@@ -210,7 +221,7 @@ const useNavigationData = (userType) => {
     const navMain = buildNavItems(
       permissions.navMain,
       // { ...NAVIGATION_CONFIG.COMMON, ...NAVIGATION_CONFIG.MODULES },
-      { ...NAVIGATION_CONFIG.COMMON }
+      { ...NAVIGATION_CONFIG.COMMON },
       // { MASTER_SETTINGS_LIMITED: LIMITED_MASTER_SETTINGS }
     );
 
@@ -225,8 +236,8 @@ const useNavigationData = (userType) => {
 
 const TEAMS_CONFIG = [
   {
-    name: "Chair Mangement",
-    logo: GalleryVerticalEnd,
+    name: "Chair Management",
+    logo: Armchair,
     plan: "",
   },
   {

@@ -21,7 +21,7 @@ const ProductStockReport = () => {
 
   const [productReport, setProductReport] = useState([]);
   const [fromDate, setFromDate] = useState(
-    moment().startOf("month").format("YYYY-MM-DD")
+    moment().startOf("month").format("YYYY-MM-DD"),
   );
   const [toDate, setToDate] = useState(moment().format("YYYY-MM-DD"));
   const [selectedProduct, setSelectedProduct] = useState("");
@@ -69,7 +69,8 @@ const ProductStockReport = () => {
         openingStock +
         Number(p.purch || 0) +
         Number(p.production || 0) -
-        Number(p.dispatch || 0);
+        Number(p.dispatch || 0) -
+        Number(p.product_damage || 0);
 
       return {
         ...p,
@@ -177,10 +178,10 @@ const ProductStockReport = () => {
                   "Category",
                   "Color",
                   "Vendor",
-                  "Damage",
                   "Opening Stock",
                   "Purchase",
                   "Production",
+                  "Damage",
                   "Dispatch",
                   "Closing Stock",
                 ].map((h) => (
@@ -220,9 +221,6 @@ const ProductStockReport = () => {
                       {row.vendor_name}
                     </td>
                     <td className="border border-black px-2 py-2 text-right">
-                      {row.product_damage}
-                    </td>
-                    <td className="border border-black px-2 py-2 text-right">
                       {renderNumber(row.openingStock)}
                     </td>
                     <td className="border border-black px-2 py-2 text-right">
@@ -230,6 +228,9 @@ const ProductStockReport = () => {
                     </td>
                     <td className="border border-black px-2 py-2 text-right">
                       {row.production}
+                    </td>
+                    <td className="border border-black px-2 py-2 text-right">
+                      {row.product_damage}
                     </td>
                     <td className="border border-black px-2 py-2 text-right">
                       {row.dispatch}
