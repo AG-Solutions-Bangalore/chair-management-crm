@@ -1,3 +1,4 @@
+import * as XLSX from "xlsx";
 import moment from "moment";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
@@ -23,7 +24,7 @@ const OrderReport = () => {
 
   const [reportData, setReportData] = useState([]);
   const [fromDate, setFromDate] = useState(
-    moment().startOf("month").format("YYYY-MM-DD")
+    moment().startOf("month").format("YYYY-MM-DD"),
   );
   const [toDate, setToDate] = useState(moment().format("YYYY-MM-DD"));
   const [selectedVendor, setSelectedVendor] = useState("");
@@ -106,6 +107,29 @@ const OrderReport = () => {
     documentTitle: "Order_Report",
   });
 
+  const handleExportExcel = () => {
+    const wsData = [];
+    Object.entries(groupedData).forEach(([vendor, vendorData]) => {
+      vendorData.items.forEach((row) => {
+        wsData.push({
+          Vendor: vendor,
+          "Order Ref": row.order_ref,
+          "Order Date": moment(row.order_date).format("DD-MM-YYYY"),
+          "Delivery Date": moment(row.order_delivery_date).format("DD-MM-YYYY"),
+          Product: row.product_name,
+          Category: row.product_category,
+          Status: row.order_status,
+          Quantity: row.qty,
+        });
+      });
+    });
+
+    const ws = XLSX.utils.json_to_sheet(wsData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Order Report");
+    XLSX.writeFile(wb, `Order_Report_${moment().format("DD-MM-YYYY")}.xlsx`);
+  };
+
   return (
     <div className="p-4 space-y-4">
       <Card className="p-6">
@@ -132,7 +156,7 @@ const OrderReport = () => {
             />
           </div>
 
-          <div className="min-w-[200px]">
+          <div className="min-w-[165px]">
             <label className="block text-sm font-medium mb-1">Vendor</label>
             <Select
               value={selectedVendor || "__ALL__"}
@@ -153,7 +177,7 @@ const OrderReport = () => {
             </Select>
           </div>
 
-          <div className="min-w-[200px]">
+          <div className="min-w-[165px]">
             <label className="block text-sm font-medium mb-1">Product</label>
             <Select
               value={selectedProduct || "__ALL__"}
@@ -174,7 +198,7 @@ const OrderReport = () => {
             </Select>
           </div>
 
-          <div className="min-w-[200px]">
+          <div className="min-w-[165px]">
             <label className="block text-sm font-medium mb-1">
               Order Status
             </label>
@@ -199,6 +223,7 @@ const OrderReport = () => {
           </div>
 
           <Button onClick={handlePrintPdf}>Print PDF</Button>
+          {/* <Button onClick={handleExportExcel}>Export to Excel</Button> */}
         </div>
       </Card>
 
@@ -267,7 +292,7 @@ const OrderReport = () => {
                           </td>
                           <td className="border border-black px-2 py-2 text-center">
                             {moment(row.order_delivery_date).format(
-                              "DD-MM-YYYY"
+                              "DD-MM-YYYY",
                             )}
                           </td>
                           <td className="border border-black px-2 py-2">
@@ -285,7 +310,7 @@ const OrderReport = () => {
                         </tr>
                       ))}
                     </React.Fragment>
-                  )
+                  ),
                 )
               ) : (
                 <tr>

@@ -1,3 +1,4 @@
+import * as XLSX from "xlsx";
 import moment from "moment";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
@@ -116,6 +117,29 @@ const ComponentStockReport = () => {
     `,
   });
 
+  const handleExportExcel = () => {
+    const wsData = tableData.map((row) => ({
+      "Component Name": row.component_name,
+      Category: row.component_category,
+      Color: row.component_color,
+      Vendor: row.vendor_name,
+      "Opening Stock": row.openingStock,
+      Purchase: row.purch,
+      Production: row.production,
+      Damage: row.component_damage,
+      Dispatch: row.dispatch,
+      "Closing Stock": row.closingStock,
+    }));
+
+    const ws = XLSX.utils.json_to_sheet(wsData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Component Stock Report");
+    XLSX.writeFile(
+      wb,
+      `Component_Stock_Report_${moment().format("DD-MM-YYYY")}.xlsx`,
+    );
+  };
+
   return (
     <div className="p-4 space-y-4">
       <Card className="p-6">
@@ -163,6 +187,7 @@ const ComponentStockReport = () => {
           </div>
 
           <Button onClick={handlePrintPdf}>Print PDF</Button>
+          {/* <Button onClick={handleExportExcel}>Export to Excel</Button> */}
         </div>
       </Card>
       <div ref={containerRef}>
@@ -198,7 +223,7 @@ const ComponentStockReport = () => {
             <tbody>
               {loadingComponent || isLoading ? (
                 <tr>
-                  <td colSpan={7} className="text-center py-4">
+                  <td colSpan={10} className="text-center py-4">
                     Loading...
                   </td>
                 </tr>
@@ -242,7 +267,7 @@ const ComponentStockReport = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan={7} className="text-center py-4">
+                  <td colSpan={10} className="text-center py-4">
                     No data available
                   </td>
                 </tr>
