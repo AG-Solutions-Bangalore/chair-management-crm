@@ -1,3 +1,4 @@
+import * as XLSX from "xlsx";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
 import moment from "moment";
@@ -26,13 +27,11 @@ const PurchaseComponentReport = () => {
 
   const [reportData, setReportData] = useState([]);
   const [fromDate, setFromDate] = useState(
-    moment().startOf("month").format("YYYY-MM-DD")
+    moment().startOf("month").format("YYYY-MM-DD"),
   );
   const [toDate, setToDate] = useState(moment().format("YYYY-MM-DD"));
   const [selectedVendor, setSelectedVendor] = useState("");
   const [selectedComponent, setSelectedComponent] = useState("");
-
-
 
   const { data: vendorMaster } = useGetApiMutation({
     url: VENDOR_API.active,
@@ -69,7 +68,6 @@ const PurchaseComponentReport = () => {
 
     getReport();
   }, [fromDate, toDate, selectedVendor, selectedComponent]);
-
 
   const groupedData = useMemo(() => {
     if (!Array.isArray(reportData)) return {};
@@ -110,6 +108,32 @@ const PurchaseComponentReport = () => {
     content: () => containerRef.current,
     documentTitle: "Purchase_Component_Report",
   });
+
+  const handleExportExcel = () => {
+    const wsData = [];
+    Object.entries(groupedData).forEach(([vendor, vendorData]) => {
+      vendorData.items.forEach((row) => {
+        wsData.push({
+          Vendor: vendor,
+          Date: moment(row.purchase_c_date).format("DD-MM-YYYY"),
+          "Bill Ref": row.purchase_c_bill_ref || "-",
+          Component: row.component_name,
+          Category: row.component_category,
+          Brand: row.component_brand,
+          Unit: row.component_unit,
+          Quantity: row.qty,
+        });
+      });
+    });
+
+    const ws = XLSX.utils.json_to_sheet(wsData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Purchase Component Report");
+    XLSX.writeFile(
+      wb,
+      `Purchase_Component_Report_${moment().format("DD-MM-YYYY")}.xlsx`,
+    );
+  };
 
   return (
     <div className="p-4 space-y-4">
@@ -180,6 +204,7 @@ const PurchaseComponentReport = () => {
           </div>
 
           <Button onClick={handlePrintPdf}>Print PDF</Button>
+          {/* <Button onClick={handleExportExcel}>Export to Excel</Button> */}
         </div>
       </Card>
 
@@ -246,7 +271,7 @@ const PurchaseComponentReport = () => {
                       </tr>
                     ))}
                   </React.Fragment>
-                )
+                ),
               )
             ) : (
               <tr>

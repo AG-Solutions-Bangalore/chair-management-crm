@@ -1,3 +1,4 @@
+import * as XLSX from "xlsx";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
 import moment from "moment";
@@ -21,7 +22,7 @@ const PurchaseProductReport = () => {
 
   const [reportData, setReportData] = useState([]);
   const [fromDate, setFromDate] = useState(
-    moment().startOf("month").format("YYYY-MM-DD")
+    moment().startOf("month").format("YYYY-MM-DD"),
   );
   const [toDate, setToDate] = useState(moment().format("YYYY-MM-DD"));
   const [selectedProduct, setSelectedProduct] = useState("");
@@ -113,6 +114,30 @@ const PurchaseProductReport = () => {
     `,
   });
 
+  const handleExportExcel = () => {
+    const wsData = [];
+    Object.entries(groupedData).forEach(([vendor, vendorData]) => {
+      vendorData.items.forEach((row) => {
+        wsData.push({
+          Vendor: vendor,
+          "Purchase Date": moment(row.purchase_p_date).format("DD-MM-YYYY"),
+          "Bill Ref": row.purchase_p_bill_ref || "-",
+          "Product Name": row.product_name,
+          Category: row.product_category,
+          Quantity: row.qty,
+        });
+      });
+    });
+
+    const ws = XLSX.utils.json_to_sheet(wsData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Purchase Product Report");
+    XLSX.writeFile(
+      wb,
+      `Purchase_Product_Report_${moment().format("DD-MM-YYYY")}.xlsx`,
+    );
+  };
+
   return (
     <div className="p-4 space-y-4">
       <Card className="p-6">
@@ -183,6 +208,7 @@ const PurchaseProductReport = () => {
           </div>
 
           <Button onClick={handlePrintPdf}>Print PDF</Button>
+          {/* <Button onClick={handleExportExcel}>Export to Excel</Button> */}
         </div>
       </Card>
 
@@ -252,7 +278,7 @@ const PurchaseProductReport = () => {
                         </tr>
                       ))}
                     </React.Fragment>
-                  )
+                  ),
                 )
               ) : (
                 <tr>

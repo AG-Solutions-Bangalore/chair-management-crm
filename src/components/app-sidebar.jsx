@@ -24,7 +24,6 @@ import {
   ClipboardList,
   Factory,
   BarChart3,
-  Armchair,
   PackageCheck,
   FileDown,
   Cog,
@@ -101,7 +100,7 @@ const NAVIGATION_CONFIG = {
       icon: BarChart3,
       items: [
         {
-          title: "Product Stock",
+          title: "Finished Stock",
           url: "/report/productstock",
           icon: PackageCheck,
         },
@@ -234,10 +233,14 @@ const useNavigationData = (userType) => {
   }, [userType]);
 };
 
+const Logo = ({ className }) => (
+  <img src="/chair-fevicon.png" alt="Logo" className={className} />
+);
+
 const TEAMS_CONFIG = [
   {
     name: "Chair Management",
-    logo: Armchair,
+    logo: Logo,
     plan: "",
   },
   {

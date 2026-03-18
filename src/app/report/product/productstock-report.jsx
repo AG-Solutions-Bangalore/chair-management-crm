@@ -1,3 +1,4 @@
+import * as XLSX from "xlsx";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
 import moment from "moment";
@@ -115,10 +116,33 @@ const ProductStockReport = () => {
     `,
   });
 
+  const handleExportExcel = () => {
+    const wsData = tableData.map((row) => ({
+      "Product Name": row.product_name,
+      Category: row.product_category,
+      Color: row.product_color,
+      Vendor: row.vendor_name,
+      "Opening Stock": row.openingStock,
+      Purchase: row.purch,
+      Production: row.production,
+      Damage: row.product_damage,
+      Dispatch: row.dispatch,
+      "Closing Stock": row.closingStock,
+    }));
+
+    const ws = XLSX.utils.json_to_sheet(wsData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Product Stock Report");
+    XLSX.writeFile(
+      wb,
+      `Product_Stock_Report_${moment().format("DD-MM-YYYY")}.xlsx`,
+    );
+  };
+
   return (
     <div className="p-4 space-y-4">
       <Card className="p-6">
-        <h2 className="font-bold mb-2 ml-2">Product Stock Report</h2>
+        <h2 className="font-bold mb-2 ml-2">Finished Stock Report</h2>
         <div className="flex flex-wrap gap-4 items-end print-hide">
           <div>
             <label className="block text-sm font-medium mb-1">From Date</label>
@@ -163,11 +187,12 @@ const ProductStockReport = () => {
           </div>
 
           <Button onClick={handlePrintPdf}>Print PDF</Button>
+          {/* <Button onClick={handleExportExcel}>Export to Excel</Button> */}
         </div>
       </Card>
       <div ref={containerRef}>
         <h2 className="font-bold hidden print:block text-xl">
-          Product Stock Report
+          Finished Stock Report
         </h2>
         <div className="mx-2 flex justify-center">
           <table className="w-full border-collapse border max-w-6xl border-black text-sm">
@@ -198,7 +223,7 @@ const ProductStockReport = () => {
             <tbody>
               {isLoading ? (
                 <tr>
-                  <td colSpan={7} className="text-center py-4">
+                  <td colSpan={10} className="text-center py-4">
                     Loading...
                   </td>
                 </tr>
@@ -242,7 +267,7 @@ const ProductStockReport = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan={7} className="text-center py-4">
+                  <td colSpan={10} className="text-center py-4">
                     No data available
                   </td>
                 </tr>
