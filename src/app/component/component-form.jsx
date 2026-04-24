@@ -49,6 +49,11 @@ const ComponentForm = () => {
     url: VENDOR_API.active,
     queryKey: ["vendor-active-compoennt"],
   });
+  console.log(vendorData);
+  const vendorOptions = vendorData?.data?.filter((v) =>
+    v.vendor_type?.includes("2"),
+  );
+
   const {
     trigger: fetchComponent,
     loading: fetchLoading,
@@ -69,7 +74,7 @@ const ComponentForm = () => {
         component_name: apiData.component_name ?? "",
         component_category: apiData.component_category ?? "",
         component_color: apiData.component_color ?? "",
-        vendor_id: apiData.vendor_id ?? "",
+        vendor_id: String(apiData.vendor_id ?? ""),
         component_unit: apiData.component_unit ?? "",
         component_mini_stock: apiData.component_mini_stock ?? "",
         component_rate: apiData.component_rate ?? "",
@@ -285,7 +290,7 @@ const ComponentForm = () => {
                   <SelectValue placeholder="Select Vendor" />
                 </SelectTrigger>
                 <SelectContent>
-                  {vendorData?.data?.map((v) => (
+                  {vendorOptions?.map((v) => (
                     <SelectItem key={v.id} value={String(v.id)}>
                       {v.vendor_name}
                     </SelectItem>

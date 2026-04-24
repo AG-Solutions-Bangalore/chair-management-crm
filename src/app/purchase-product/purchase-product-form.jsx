@@ -80,10 +80,19 @@ const PurchaseProductForm = () => {
     queryKey: ["vendor-active"],
   });
 
+  const vendorOptions = vendorData?.data?.filter((v) =>
+    v.vendor_type?.includes("1"),
+  );
+
   const { data: productData } = useGetApiMutation({
     url: PRODUCT_API.active,
     queryKey: ["product-active"],
   });
+
+  const filteredProductOptions = productData?.data?.filter(
+    (p) => p.vendor_id == data?.purchase_p_vendor_id,
+  );
+  // console.log(filteredProductOptions);
 
   const fetchData = async () => {
     try {
@@ -274,7 +283,7 @@ const PurchaseProductForm = () => {
                   <SelectValue placeholder="Select Vendor" />
                 </SelectTrigger>
                 <SelectContent>
-                  {vendorData?.data?.map((v) => (
+                  {vendorOptions?.map((v) => (
                     <SelectItem key={v.id} value={String(v.id)}>
                       {v.vendor_name}
                     </SelectItem>
@@ -353,7 +362,7 @@ const PurchaseProductForm = () => {
                         <SelectValue placeholder="Select Product" />
                       </SelectTrigger>
                       <SelectContent>
-                        {productData?.data?.map((p) => (
+                        {filteredProductOptions?.map((p) => (
                           <SelectItem key={p.id} value={String(p.id)}>
                             {p.product_name}
                           </SelectItem>

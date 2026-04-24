@@ -1,7 +1,6 @@
-import * as XLSX from "xlsx-js-style";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useReactToPrint } from "react-to-print";
 import moment from "moment";
+import { exportToExcel } from "@/utils/excelExport";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -64,14 +63,16 @@ const ProductStockReport = () => {
       const openingStock =
         Number(p.openpurch || 0) +
         Number(p.openproduction || 0) -
-        Number(p.dispatchorder || 0);
+        Number(p.dispatchorder || 0) +
+        Number(p.returnorder || 0);
 
       const closingStock =
         openingStock +
         Number(p.purch || 0) +
         Number(p.production || 0) -
         Number(p.dispatch || 0) -
-        Number(p.product_damage || 0);
+        Number(p.product_damage || 0) +
+        Number(p.returns || 0);
 
       return {
         ...p,
@@ -92,63 +93,42 @@ const ProductStockReport = () => {
     return [{ id: "__ALL__", product_name: "All Products" }, ...products];
   }, [productMaster]);
 
-  const handlePrintPdf = useReactToPrint({
-    content: () => containerRef.current,
-    documentTitle: "Product_Stock_Report",
-    pageStyle: `
-    @page {
-      size: A4 portrait;
-      margin: 5mm;
-    }
-    @media print {
-      body {
-        font-size: 10px;
-        margin: 0mm;
-        padding: 0mm;
-      }
-      table {
-        font-size: 11px;
-      }
-      .print-hide {
-        display: none;
-      }
-    }
-    `,
-  });
+  const handleExportToExcel = () => {
+    const headers = [
+      "Product Name",
+      "Category",
+      "Color",
+      "Vendor",
+      "Opening Stock",
+      "Purchase",
+      "Production",
+      "Damage",
+      "Dispatch",
+      "Return",
+      "Closing Stock",
+    ];
 
-  const handleExportExcel = () => {
-    const wsData = tableData.map((row) => ({
-      "Product Name": row.product_name,
-      Category: row.product_category,
-      Color: row.product_color,
-      Vendor: row.vendor_name,
-      "Opening Stock": row.openingStock,
-      Purchase: row.purch,
-      Production: row.production,
-      Damage: row.product_damage,
-      Dispatch: row.dispatch,
-      "Closing Stock": row.closingStock,
-    }));
+    const data = tableData.map((row) => [
+      row.product_name,
+      row.product_category,
+      row.product_color,
+      row.vendor_name,
+      row.openingStock,
+      row.purch,
+      row.production,
+      row.product_damage,
+      row.dispatch,
+      row.returns,
+      row.closingStock,
+    ]);
 
-    const ws = XLSX.utils.json_to_sheet(wsData);
-
-    // ✅ Make header row bold
-    const range = XLSX.utils.decode_range(ws["!ref"]);
-    for (let col = range.s.c; col <= range.e.c; col++) {
-      const cellAddress = XLSX.utils.encode_cell({ r: 0, c: col });
-      if (ws[cellAddress]) {
-        ws[cellAddress].s = {
-          font: { bold: true },
-        };
-      }
-    }
-
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Product Stock Report");
-    XLSX.writeFile(
-      wb,
-      `Product_Stock_Report_${moment().format("DD-MM-YYYY")}.xlsx`,
-    );
+    exportToExcel({
+      fileName: `Product_Stock_Report_${moment().format("DD-MM-YYYY")}`,
+      sheetName: "Product Stock Report",
+      reportTitle: "Finished Stock Report",
+      headers,
+      data,
+    });
   };
 
   return (
@@ -198,8 +178,7 @@ const ProductStockReport = () => {
             </Select>
           </div>
 
-          <Button onClick={handlePrintPdf}>Print PDF</Button>
-          {/* <Button onClick={handleExportExcel}>Export to Excel</Button> */}
+          <Button onClick={handleExportToExcel}>Export to Excel</Button>
         </div>
       </Card>
       <div ref={containerRef}>
@@ -220,6 +199,7 @@ const ProductStockReport = () => {
                   "Production",
                   "Damage",
                   "Dispatch",
+                  "Return",
                   "Closing Stock",
                 ].map((h) => (
                   <th
@@ -235,7 +215,7 @@ const ProductStockReport = () => {
             <tbody>
               {isLoading ? (
                 <tr>
-                  <td colSpan={10} className="text-center py-4">
+                  <td colSpan={11} className="text-center py-4">
                     Loading...
                   </td>
                 </tr>
@@ -273,13 +253,16 @@ const ProductStockReport = () => {
                       {row.dispatch}
                     </td>
                     <td className="border border-black px-2 py-2 text-right">
+                      {renderNumber(row.returns)}
+                    </td>
+                    <td className="border border-black px-2 py-2 text-right">
                       {renderNumber(row.closingStock)}
                     </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan={10} className="text-center py-4">
+                  <td colSpan={11} className="text-center py-4">
                     No data available
                   </td>
                 </tr>

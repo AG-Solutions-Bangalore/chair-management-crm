@@ -1,7 +1,6 @@
-import * as XLSX from "xlsx-js-style";
 import moment from "moment";
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { useReactToPrint } from "react-to-print";
+import { exportToExcel } from "@/utils/excelExport";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -102,44 +101,41 @@ const OrderReport = () => {
     const products = productMaster?.data || [];
     return [{ id: "__ALL__", product_name: "All Products" }, ...products];
   }, [productMaster]);
-  const handlePrintPdf = useReactToPrint({
-    content: () => containerRef.current,
-    documentTitle: "Order_Report",
-  });
+  const handleExportToExcel = () => {
+    const headers = [
+      "Vendor",
+      "Order Ref",
+      "Order Date",
+      "Delivery Date",
+      "Product",
+      "Category",
+      "Status",
+      "Quantity",
+    ];
 
-  const handleExportExcel = () => {
-    const wsData = [];
+    const data = [];
     Object.entries(groupedData).forEach(([vendor, vendorData]) => {
       vendorData.items.forEach((row) => {
-        wsData.push({
-          Vendor: vendor,
-          "Order Ref": row.order_ref,
-          "Order Date": moment(row.order_date).format("DD-MM-YYYY"),
-          "Delivery Date": moment(row.order_delivery_date).format("DD-MM-YYYY"),
-          Product: row.product_name,
-          Category: row.product_category,
-          Status: row.order_status,
-          Quantity: row.qty,
-        });
+        data.push([
+          vendor,
+          row.order_ref,
+          moment(row.order_date).format("DD-MM-YYYY"),
+          moment(row.order_delivery_date).format("DD-MM-YYYY"),
+          row.product_name,
+          row.product_category,
+          row.order_status,
+          row.qty,
+        ]);
       });
     });
 
-    const ws = XLSX.utils.json_to_sheet(wsData);
-
-    // ✅ Make header row bold
-    const range = XLSX.utils.decode_range(ws["!ref"]);
-    for (let col = range.s.c; col <= range.e.c; col++) {
-      const cellAddress = XLSX.utils.encode_cell({ r: 0, c: col });
-      if (ws[cellAddress]) {
-        ws[cellAddress].s = {
-          font: { bold: true },
-        };
-      }
-    }
-
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Order Report");
-    XLSX.writeFile(wb, `Order_Report_${moment().format("DD-MM-YYYY")}.xlsx`);
+    exportToExcel({
+      fileName: `Order_Report_${moment().format("DD-MM-YYYY")}`,
+      sheetName: "Order Report",
+      reportTitle: "Order Report",
+      headers,
+      data,
+    });
   };
 
   return (
@@ -234,8 +230,7 @@ const OrderReport = () => {
             </Select>
           </div>
 
-          <Button onClick={handlePrintPdf}>Print PDF</Button>
-          {/* <Button onClick={handleExportExcel}>Export to Excel</Button> */}
+          <Button onClick={handleExportToExcel}>Export to Excel</Button>
         </div>
       </Card>
 

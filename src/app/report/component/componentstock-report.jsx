@@ -1,7 +1,6 @@
-import * as XLSX from "xlsx-js-style";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import moment from "moment";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { useReactToPrint } from "react-to-print";
+import { exportToExcel } from "@/utils/excelExport";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -71,14 +70,16 @@ const ComponentStockReport = () => {
       const openingStock =
         Number(p.openpurch || 0) +
         Number(p.openproduction || 0) -
-        Number(p.dispatchorder || 0);
+        Number(p.dispatchorder || 0) +
+        Number(p.returns || 0);
 
       const closingStock =
         openingStock +
         Number(p.purch || 0) +
         Number(p.production || 0) -
         Number(p.dispatch || 0) -
-        Number(p.component_damage || 0);
+        Number(p.component_damage || 0) +
+        Number(p.returns || 0);
 
       return {
         ...p,
@@ -93,63 +94,42 @@ const ComponentStockReport = () => {
       <span className={num < 0 ? "text-red-600 font-semibold" : ""}>{num}</span>
     );
   };
-  const handlePrintPdf = useReactToPrint({
-    content: () => containerRef.current,
-    documentTitle: "Product_Stock_Report",
-    pageStyle: `
-    @page {
-      size: A4 portrait;
-      margin: 5mm;
-    }
-    @media print {
-      body {
-        font-size: 10px;
-        margin: 0mm;
-        padding: 0mm;
-      }
-      table {
-        font-size: 11px;
-      }
-      .print-hide {
-        display: none;
-      }
-    }
-    `,
-  });
+  const handleExportToExcel = () => {
+    const headers = [
+      "Component Name",
+      "Category",
+      "Color",
+      "Vendor",
+      "Opening Stock",
+      "Purchase",
+      "Production",
+      "Damage",
+      "Dispatch",
+      "Return",
+      "Closing Stock",
+    ];
 
-  const handleExportExcel = () => {
-    const wsData = tableData.map((row) => ({
-      "Component Name": row.component_name,
-      Category: row.component_category,
-      Color: row.component_color,
-      Vendor: row.vendor_name,
-      "Opening Stock": row.openingStock,
-      Purchase: row.purch,
-      Production: row.production,
-      Damage: row.component_damage,
-      Dispatch: row.dispatch,
-      "Closing Stock": row.closingStock,
-    }));
+    const data = tableData.map((row) => [
+      row.component_name,
+      row.component_category,
+      row.component_color,
+      row.vendor_name,
+      row.openingStock,
+      row.purch,
+      row.production,
+      row.component_damage,
+      row.dispatch,
+      row.returns,
+      row.closingStock,
+    ]);
 
-    const ws = XLSX.utils.json_to_sheet(wsData);
-
-    // ✅ Make header row bold
-    const range = XLSX.utils.decode_range(ws["!ref"]);
-    for (let col = range.s.c; col <= range.e.c; col++) {
-      const cellAddress = XLSX.utils.encode_cell({ r: 0, c: col });
-      if (ws[cellAddress]) {
-        ws[cellAddress].s = {
-          font: { bold: true },
-        };
-      }
-    }
-
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Component Stock Report");
-    XLSX.writeFile(
-      wb,
-      `Component_Stock_Report_${moment().format("DD-MM-YYYY")}.xlsx`,
-    );
+    exportToExcel({
+      fileName: `Component_Stock_Report_${moment().format("DD-MM-YYYY")}`,
+      sheetName: "Component Stock Report",
+      reportTitle: "Component Stock Report",
+      headers,
+      data,
+    });
   };
 
   return (
@@ -198,8 +178,7 @@ const ComponentStockReport = () => {
             </Select>
           </div>
 
-          <Button onClick={handlePrintPdf}>Print PDF</Button>
-          {/* <Button onClick={handleExportExcel}>Export to Excel</Button> */}
+          <Button onClick={handleExportToExcel}>Export to Excel</Button>
         </div>
       </Card>
       <div ref={containerRef}>
@@ -220,6 +199,7 @@ const ComponentStockReport = () => {
                   "Production",
                   "Damage",
                   "Dispatch",
+                  "Return",
                   "Closing Stock",
                 ].map((h) => (
                   <th
@@ -235,7 +215,7 @@ const ComponentStockReport = () => {
             <tbody>
               {loadingComponent || isLoading ? (
                 <tr>
-                  <td colSpan={10} className="text-center py-4">
+                  <td colSpan={11} className="text-center py-4">
                     Loading...
                   </td>
                 </tr>
@@ -273,13 +253,16 @@ const ComponentStockReport = () => {
                       {row.dispatch}
                     </td>
                     <td className="border border-black px-2 py-2 text-right">
+                      {row.returns}
+                    </td>
+                    <td className="border border-black px-2 py-2 text-right">
                       {renderNumber(row.closingStock)}
                     </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan={10} className="text-center py-4">
+                  <td colSpan={11} className="text-center py-4">
                     No data available
                   </td>
                 </tr>

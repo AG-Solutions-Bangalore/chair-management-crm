@@ -82,10 +82,18 @@ const PurchaseComponentForm = () => {
     queryKey: ["vendor-active"],
   });
 
+  const venderOptions = vendorData?.data?.filter((v) =>
+    v.vendor_type?.includes("2"),
+  );
+
   const { data: componentData } = useGetApiMutation({
     url: COMPONENTS_API.active,
     queryKey: ["component-active"],
   });
+
+  const filteredComponentOptions = componentData?.data?.filter(
+    (c) => c.vendor_id == data?.purchase_c_vendor_id,
+  );
 
   const fetchData = async () => {
     try {
@@ -283,7 +291,7 @@ const PurchaseComponentForm = () => {
                   <SelectValue placeholder="Select Vendor" />
                 </SelectTrigger>
                 <SelectContent>
-                  {vendorData?.data?.map((v) => (
+                  {venderOptions?.map((v) => (
                     <SelectItem key={v.id} value={String(v.id)}>
                       {v.vendor_name}
                     </SelectItem>
@@ -361,7 +369,7 @@ const PurchaseComponentForm = () => {
                         <SelectValue placeholder="Select Component" />
                       </SelectTrigger>
                       <SelectContent>
-                        {componentData?.data?.map((c) => (
+                        {filteredComponentOptions?.map((c) => (
                           <SelectItem key={c.id} value={String(c.id)}>
                             {c.component_name}
                           </SelectItem>
