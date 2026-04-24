@@ -1,8 +1,9 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
 import moment from "moment";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { exportToExcel } from "@/utils/excelExport";
 
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import {
   Select,
   SelectContent,
@@ -10,13 +11,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Card } from "@/components/ui/card";
 
 import { PRODUCT_API, REPORT_API, VENDOR_API } from "@/constants/apiConstants";
+
+import { ORDER_STATUSES } from "@/constants/orderConstants";
 import { useApiMutation } from "@/hooks/useApiMutation";
 import { useGetApiMutation } from "@/hooks/useGetApiMutation";
 
-const PurchaseProductReport = () => {
+const ReturnOrderReport = () => {
   const containerRef = useRef(null);
 
   const [reportData, setReportData] = useState([]);
@@ -24,25 +26,27 @@ const PurchaseProductReport = () => {
     moment().startOf("month").format("YYYY-MM-DD"),
   );
   const [toDate, setToDate] = useState(moment().format("YYYY-MM-DD"));
-  const [selectedProduct, setSelectedProduct] = useState("");
   const [selectedVendor, setSelectedVendor] = useState("");
-
-  const { data: productMaster } = useGetApiMutation({
-    url: PRODUCT_API.active,
-    queryKey: ["products"],
-  });
+  const [selectedProduct, setSelectedProduct] = useState("");
+  const [selectedStatus, setSelectedStatus] = useState("");
 
   const { data: vendorMaster } = useGetApiMutation({
     url: VENDOR_API.active,
     queryKey: ["vendors"],
   });
 
+  const { data: productMaster } = useGetApiMutation({
+    url: PRODUCT_API.active,
+    queryKey: ["products"],
+  });
+
   const { trigger: fetchReport, loading: isLoading } = useApiMutation();
+
   useEffect(() => {
     const getReport = async () => {
       try {
         const res = await fetchReport({
-          url: REPORT_API.purchaseProductReport,
+          url: REPORT_API.returnOrderReport,
           method: "post",
           data: {
             from_date: fromDate,
@@ -54,19 +58,20 @@ const PurchaseProductReport = () => {
 
         setReportData(res?.data || []);
       } catch (error) {
-        console.error("Purchase report fetch failed", error);
+        console.error("Return Order report fetch failed", error);
         setReportData([]);
       }
     };
 
     getReport();
-  }, [fromDate, toDate, selectedVendor, selectedProduct]);
+  }, [fromDate, toDate, selectedVendor, selectedProduct, selectedStatus]);
+
   const groupedData = useMemo(() => {
     if (!Array.isArray(reportData)) return {};
 
     return reportData.reduce((acc, item) => {
       const vendor = item.vendor_name || "Unknown Vendor";
-      const qty = Number(item.purchase_p_sub_qnty || 0);
+      const qty = Number(item.order_p_sub_qnty || 0);
 
       if (!acc[vendor]) {
         acc[vendor] = {
@@ -85,21 +90,22 @@ const PurchaseProductReport = () => {
       return acc;
     }, {});
   }, [reportData]);
-  const productsWithAll = useMemo(() => {
-    const products = productMaster?.data || [];
-    return [{ id: "__ALL__", product_name: "All Products" }, ...products];
-  }, [productMaster]);
 
   const vendorsWithAll = useMemo(() => {
     const vendors = vendorMaster?.data || [];
     return [{ id: "__ALL__", vendor_name: "All Vendors" }, ...vendors];
   }, [vendorMaster]);
+
+  const productsWithAll = useMemo(() => {
+    const products = productMaster?.data || [];
+    return [{ id: "__ALL__", product_name: "All Products" }, ...products];
+  }, [productMaster]);
   const handleExportToExcel = () => {
     const headers = [
       "Vendor",
-      "Purchase Date",
-      "Bill Ref",
-      "Product Name",
+      "Return Ref",
+      "Return Date",
+      "Product",
       "Category",
       "Quantity",
     ];
@@ -109,8 +115,8 @@ const PurchaseProductReport = () => {
       vendorData.items.forEach((row) => {
         data.push([
           vendor,
-          moment(row.purchase_p_date).format("DD-MM-YYYY"),
-          row.purchase_p_bill_ref || "-",
+          row.order_ref,
+          moment(row.order_date).format("DD-MM-YYYY"),
           row.product_name,
           row.product_category,
           row.qty,
@@ -119,9 +125,9 @@ const PurchaseProductReport = () => {
     });
 
     exportToExcel({
-      fileName: `Purchase_Product_Report_${moment().format("DD-MM-YYYY")}`,
-      sheetName: "Purchase Product Report",
-      reportTitle: "Purchase Product Report",
+      fileName: `ReturnOrder_Report_${moment().format("DD-MM-YYYY")}`,
+      sheetName: "Return Order Report",
+      reportTitle: "Return Order Report",
       headers,
       data,
     });
@@ -130,7 +136,7 @@ const PurchaseProductReport = () => {
   return (
     <div className="p-4 space-y-4">
       <Card className="p-6">
-        <h2 className="font-bold mb-4">Purchase Product Report</h2>
+        <h2 className="font-bold mb-4">Return Order Report</h2>
 
         <div className="flex flex-wrap gap-4 items-end print-hide">
           <div>
@@ -153,12 +159,12 @@ const PurchaseProductReport = () => {
             />
           </div>
 
-          <div className="min-w-[220px]">
+          <div className="min-w-[165px]">
             <label className="block text-sm font-medium mb-1">Vendor</label>
             <Select
               value={selectedVendor || "__ALL__"}
-              onValueChange={(value) =>
-                setSelectedVendor(value === "__ALL__" ? "" : value)
+              onValueChange={(val) =>
+                setSelectedVendor(val === "__ALL__" ? "" : val)
               }
             >
               <SelectTrigger>
@@ -174,13 +180,12 @@ const PurchaseProductReport = () => {
             </Select>
           </div>
 
-          {/* Product Select */}
-          <div className="min-w-[220px]">
+          <div className="min-w-[165px]">
             <label className="block text-sm font-medium mb-1">Product</label>
             <Select
               value={selectedProduct || "__ALL__"}
-              onValueChange={(value) =>
-                setSelectedProduct(value === "__ALL__" ? "" : value)
+              onValueChange={(val) =>
+                setSelectedProduct(val === "__ALL__" ? "" : val)
               }
             >
               <SelectTrigger>
@@ -200,36 +205,40 @@ const PurchaseProductReport = () => {
         </div>
       </Card>
 
-      <div ref={containerRef} className="p-6">
-        <h2 className="font-bold hidden print:block text-xl mb-4">
-          Purchase Product Report
-        </h2>
+      <Card className="p-6 h-[600px] overflow-y-auto">
+        <div ref={containerRef}>
+          <h2 className="font-bold text-xl mb-4 text-center hidden print:block">
+            Order Report
+          </h2>
 
-        <div className="overflow-x-auto">
           <table className="w-full border-collapse border border-black text-sm">
-            <thead className="bg-gray-100">
+            <thead className="bg-gray-100 sticky top-0">
               <tr>
-                {[
-                  "Purchase Date",
-                  "Bill Ref",
-                  "Product Name",
-                  "Category",
-                  "Quantity",
-                ].map((h) => (
-                  <th
-                    key={h}
-                    className="border border-black px-2 py-2 text-center"
-                  >
-                    {h}
-                  </th>
-                ))}
+                <th className="border border-black px-2 py-2 text-center">
+                  Return Ref
+                </th>
+                <th className="border border-black px-2 py-2 text-center">
+                  Return Date
+                </th>
+                <th className="border border-black px-2 py-2 text-center">
+                  Product
+                </th>
+                <th className="border border-black px-2 py-2 text-center">
+                  Category
+                </th>
+                <th className="border border-black px-2 py-2 text-right">
+                  Quantity
+                </th>
               </tr>
             </thead>
 
             <tbody>
               {isLoading ? (
                 <tr>
-                  <td colSpan={5} className="text-center py-4">
+                  <td
+                    colSpan={7}
+                    className="border border-black text-center py-4"
+                  >
                     Loading...
                   </td>
                 </tr>
@@ -239,20 +248,19 @@ const PurchaseProductReport = () => {
                     <React.Fragment key={vIndex}>
                       <tr className="bg-gray-200 font-semibold">
                         <td
-                          colSpan={5}
-                          className="border border-black px-2 py-2 pl-6"
+                          colSpan={7}
+                          className="border border-black px-2 py-2"
                         >
                           Vendor: {vendor}
                         </td>
                       </tr>
-
                       {vendorData.items.map((row, index) => (
                         <tr key={index}>
                           <td className="border border-black px-2 py-2 text-center">
-                            {moment(row.purchase_p_date).format("DD-MM-YYYY")}
+                            {row.order_ref}
                           </td>
                           <td className="border border-black px-2 py-2 text-center">
-                            {row.purchase_p_bill_ref || "-"}
+                            {moment(row.order_date).format("DD-MM-YYYY")}
                           </td>
                           <td className="border border-black px-2 py-2">
                             {row.product_name}
@@ -270,7 +278,10 @@ const PurchaseProductReport = () => {
                 )
               ) : (
                 <tr>
-                  <td colSpan={5} className="text-center py-4">
+                  <td
+                    colSpan={7}
+                    className="border border-black text-center py-4"
+                  >
                     No data available
                   </td>
                 </tr>
@@ -278,9 +289,9 @@ const PurchaseProductReport = () => {
             </tbody>
           </table>
         </div>
-      </div>
+      </Card>
     </div>
   );
 };
 
-export default PurchaseProductReport;
+export default ReturnOrderReport;

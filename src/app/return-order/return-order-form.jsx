@@ -35,7 +35,7 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   BOM_API,
   COMPONENTS_API,
-  ORDERS_API,
+  RETURN_ORDERS_API,
   PRODUCT_API,
   VENDOR_API,
 } from "@/constants/apiConstants";
@@ -72,7 +72,7 @@ const initialState = {
   order_status: "",
   products: [createInitialProduct()],
 };
-const OrderForm = () => {
+const ReturnOrderForm = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const isEditMode = Boolean(id);
@@ -122,7 +122,7 @@ const OrderForm = () => {
   const availableProductsCount = getAvailableProducts().length;
   const fetchOrder = async () => {
     try {
-      const res = await apiTrigger({ url: ORDERS_API.byId(id) });
+      const res = await apiTrigger({ url: RETURN_ORDERS_API.byId(id) });
       const o = res?.data;
       const componentsByProduct = (o?.subs1 || []).reduce((acc, c) => {
         const pid = String(c.order_sub_product_id);
@@ -299,7 +299,7 @@ const OrderForm = () => {
   const handleDeleteProduct = async () => {
     try {
       const res = await deleteTrigger({
-        url: ORDERS_API.deleteSubProductById(deleteId),
+        url: RETURN_ORDERS_API.deleteSubProductById(deleteId),
         method: "delete",
       });
 
@@ -321,7 +321,7 @@ const OrderForm = () => {
   const handleDeleteComponent = async () => {
     try {
       const res = await deleteTrigger({
-        url: ORDERS_API.deleteSubComponentById(deleteId),
+        url: RETURN_ORDERS_API.deleteSubComponentById(deleteId),
         method: "delete",
       });
 
@@ -388,7 +388,9 @@ const OrderForm = () => {
     };
     try {
       const res = await submitTrigger({
-        url: isEditMode ? ORDERS_API.updateById(id) : ORDERS_API.list,
+        url: isEditMode
+          ? RETURN_ORDERS_API.updateById(id)
+          : RETURN_ORDERS_API.list,
         method: isEditMode ? "put" : "post",
         data: payload,
       });
@@ -415,7 +417,7 @@ const OrderForm = () => {
       <form onSubmit={handleSubmit}>
         <PageHeader
           icon={Package}
-          title={isEditMode ? "Edit Order" : "Create Order"}
+          title={isEditMode ? "Edit Return Order" : "Create Return Order"}
           rightContent={
             <>
               <Button
@@ -441,7 +443,7 @@ const OrderForm = () => {
 
         <Card className="p-4 grid md:grid-cols-3 gap-4">
           <div>
-            <label className="text-sm font-medium">Order Date *</label>
+            <label className="text-sm font-medium">Return Date *</label>
 
             <Input
               type="date"
@@ -449,18 +451,6 @@ const OrderForm = () => {
               onChange={(e) => setData({ ...data, order_date: e.target.value })}
             />
             <ErrorText message={errors.order_date} />
-          </div>
-          <div>
-            <label className="text-sm font-medium">Delivery Date</label>
-
-            <Input
-              type="date"
-              value={data.order_delivery_date}
-              onChange={(e) =>
-                setData({ ...data, order_delivery_date: e.target.value })
-              }
-            />
-            <ErrorText message={errors.order_delivery_date} />
           </div>
           <div>
             <label className="text-sm font-medium">Buyer *</label>
@@ -482,36 +472,13 @@ const OrderForm = () => {
             </Select>
             <ErrorText message={errors.order_buyer_id} />
           </div>
-          <div className="md:col-span-2">
-            <label className="text-sm font-medium">Notes</label>
+          <div>
+            <label className="text-sm font-medium">Return note</label>
             <Textarea
-              placeholder="Order note"
+              placeholder="Return note"
               value={data.order_note}
               onChange={(e) => setData({ ...data, order_note: e.target.value })}
             />
-          </div>
-          <div>
-            {isEditMode && (
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Status *</label>
-
-                <Select
-                  value={data.order_status || ""}
-                  onValueChange={(v) => setData({ ...data, order_status: v })}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select Status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {ORDER_STATUSES.map((u) => (
-                      <SelectItem key={u.id} value={u.value}>
-                        {u.value}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            )}
           </div>
         </Card>
         <Card className="p-4 mt-5">
@@ -797,4 +764,4 @@ const OrderForm = () => {
   );
 };
 
-export default OrderForm;
+export default ReturnOrderForm;

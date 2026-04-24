@@ -66,6 +66,15 @@ export const ORDERS_API = {
   deleteSubComponentById: (id) => `/order-sub1/${id}`,
   deleteById: (id) => `/order/${id}`,
 };
+export const RETURN_ORDERS_API = {
+  list: "/return-order",
+  byId: (id) => `/return-order/${id}`,
+  updateById: (id) => `/return-order/${id}`,
+  updateStatus: (id) => `/return-orders/${id}/status`,
+  deleteSubProductById: (id) => `/return-order-sub/${id}`,
+  deleteSubComponentById: (id) => `/return-order-sub1/${id}`,
+  deleteById: (id) => `/return-order/${id}`,
+};
 export const PRODUCTION_API = {
   list: "/production",
   byId: (id) => `/production/${id}`,
@@ -90,6 +99,7 @@ export const REPORT_API = {
   purchaseProductReport: "/purchase-product-report",
   purchaseComponentReport: "/purchase-component-report",
   orderReport: "/order-report",
+  returnOrderReport: "/return-order-report",
 };
 export const PR_API = {
   list: "/pr",

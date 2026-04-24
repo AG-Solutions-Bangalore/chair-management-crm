@@ -1,7 +1,7 @@
 const PageHeader = ({
   icon: IconComponent,
   title = "Page Title",
-  description = "Add a description here",
+  description = "",
   rightContent = null,
 }) => {
   return (

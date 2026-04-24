@@ -25,12 +25,14 @@ import { Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
 import AuthRoute from "./auth-route";
 import ProtectedRoute from "./protected-route";
-import ProductionEdit from "../app/production/production-edit";
 import ProductStockReport from "@/app/report/product/productstock-report";
 import ComponentStockReport from "@/app/report/component/componentstock-report";
 import PurchaseProductReport from "@/app/report/purchaseproduct/purchase-product-report";
 import PurchaseComponentReport from "@/app/report/purchasecomponent/purchase-component-report";
 import OrderReport from "@/app/report/orderreport/order-report";
+import ReturnOrderList from "@/app/return-order/return-order-list";
+import ReturnOrderForm from "@/app/return-order/return-order-form";
+import ReturnOrderReport from "@/app/report/returnorder-report/return-order-report";
 
 function AppRoutes() {
   return (
@@ -163,6 +165,30 @@ function AppRoutes() {
             }
           />
           <Route
+            path="/return-order"
+            element={
+              <Suspense fallback={<LoadingBar />}>
+                <ReturnOrderList />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/return-order/create"
+            element={
+              <Suspense fallback={<LoadingBar />}>
+                <ReturnOrderForm />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/return-order/edit/:id"
+            element={
+              <Suspense fallback={<LoadingBar />}>
+                <ReturnOrderForm />
+              </Suspense>
+            }
+          />
+          <Route
             path="/purchase-product"
             element={
               <Suspense fallback={<LoadingBar />}>
@@ -271,6 +297,14 @@ function AppRoutes() {
             element={
               <Suspense fallback={<LoadingBar />}>
                 <OrderReport />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/report/return-order"
+            element={
+              <Suspense fallback={<LoadingBar />}>
+                <ReturnOrderReport />
               </Suspense>
             }
           />

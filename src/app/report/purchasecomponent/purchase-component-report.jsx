@@ -1,7 +1,6 @@
-import * as XLSX from "xlsx-js-style";
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { useReactToPrint } from "react-to-print";
 import moment from "moment";
+import { exportToExcel } from "@/utils/excelExport";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -104,47 +103,41 @@ const PurchaseComponentReport = () => {
     return [{ id: "__ALL__", component_name: "All Components" }, ...components];
   }, [componentMaster]);
 
-  const handlePrintPdf = useReactToPrint({
-    content: () => containerRef.current,
-    documentTitle: "Purchase_Component_Report",
-  });
+  const handleExportToExcel = () => {
+    const headers = [
+      "Vendor",
+      "Date",
+      "Bill Ref",
+      "Component",
+      "Category",
+      "Brand",
+      "Unit",
+      "Quantity",
+    ];
 
-  const handleExportExcel = () => {
-    const wsData = [];
+    const data = [];
     Object.entries(groupedData).forEach(([vendor, vendorData]) => {
       vendorData.items.forEach((row) => {
-        wsData.push({
-          Vendor: vendor,
-          Date: moment(row.purchase_c_date).format("DD-MM-YYYY"),
-          "Bill Ref": row.purchase_c_bill_ref || "-",
-          Component: row.component_name,
-          Category: row.component_category,
-          Brand: row.component_brand,
-          Unit: row.component_unit,
-          Quantity: row.qty,
-        });
+        data.push([
+          vendor,
+          moment(row.purchase_c_date).format("DD-MM-YYYY"),
+          row.purchase_c_bill_ref || "-",
+          row.component_name,
+          row.component_category,
+          row.component_brand,
+          row.component_unit,
+          row.qty,
+        ]);
       });
     });
 
-    const ws = XLSX.utils.json_to_sheet(wsData);
-
-    // ✅ Make header row bold
-    const range = XLSX.utils.decode_range(ws["!ref"]);
-    for (let col = range.s.c; col <= range.e.c; col++) {
-      const cellAddress = XLSX.utils.encode_cell({ r: 0, c: col });
-      if (ws[cellAddress]) {
-        ws[cellAddress].s = {
-          font: { bold: true },
-        };
-      }
-    }
-
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Purchase Component Report");
-    XLSX.writeFile(
-      wb,
-      `Purchase_Component_Report_${moment().format("DD-MM-YYYY")}.xlsx`,
-    );
+    exportToExcel({
+      fileName: `Purchase_Component_Report_${moment().format("DD-MM-YYYY")}`,
+      sheetName: "Purchase Component Report",
+      reportTitle: "Purchase Component Report",
+      headers,
+      data,
+    });
   };
 
   return (
@@ -215,8 +208,7 @@ const PurchaseComponentReport = () => {
             </Select>
           </div>
 
-          <Button onClick={handlePrintPdf}>Print PDF</Button>
-          {/* <Button onClick={handleExportExcel}>Export to Excel</Button> */}
+          <Button onClick={handleExportToExcel}>Export to Excel</Button>
         </div>
       </Card>
 

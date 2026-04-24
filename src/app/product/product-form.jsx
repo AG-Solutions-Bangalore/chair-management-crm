@@ -46,6 +46,9 @@ const ProductForm = ({ isOpen, onClose, productId }) => {
     url: VENDOR_API.active,
     queryKey: ["vendor-active-product"],
   });
+  const vendorOptions = vendorData?.data?.filter((v) =>
+    v.vendor_type?.includes("1"),
+  );
   useEffect(() => {
     if (!isOpen) return;
 
@@ -67,7 +70,7 @@ const ProductForm = ({ isOpen, onClose, productId }) => {
           product_category: res.data.product_category || "",
           product_rate: res.data.product_rate || "",
           product_color: res.data.product_color || "",
-          vendor_id: res.data.vendor_id || "",
+          vendor_id: String(res.data.vendor_id || ""),
           product_description: res.data.product_description || "",
           product_damage: res.data.product_damage || "",
           product_status: res.data.product_status || "Active",
@@ -217,7 +220,7 @@ const ProductForm = ({ isOpen, onClose, productId }) => {
               <SelectValue placeholder="Select Vendor" />
             </SelectTrigger>
             <SelectContent>
-              {vendorData?.data?.map((v) => (
+              {vendorOptions?.map((v) => (
                 <SelectItem key={v.id} value={String(v.id)}>
                   {v.vendor_name}
                 </SelectItem>
