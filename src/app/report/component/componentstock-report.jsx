@@ -71,7 +71,8 @@ const ComponentStockReport = () => {
         Number(p.openpurch || 0) +
         Number(p.openproduction || 0) -
         Number(p.dispatchorder || 0) +
-        Number(p.returns || 0);
+        Number(p.returns || 0) +
+        Number(p.component_damage || 0);
 
       const closingStock =
         openingStock +

@@ -64,7 +64,8 @@ const ProductStockReport = () => {
         Number(p.openpurch || 0) +
         Number(p.openproduction || 0) -
         Number(p.dispatchorder || 0) +
-        Number(p.returnorder || 0);
+        Number(p.returnorder || 0) +
+        Number(p.product_damage || 0);
 
       const closingStock =
         openingStock +
